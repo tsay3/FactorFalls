@@ -1,0 +1,1 @@
+// The graphics file handles the drawing of the game model onto the canvas of the webpage.
