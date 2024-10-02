@@ -5,37 +5,37 @@ const tileMarginWidth = 6;
 var totalTileWidth = tileWidth + tileMarginWidth;
 const tileHeight = 50;
 const sideMarginWidth = 25;
-const bottomMarginHeight = 60;
+const bottomMarginHeight = 30;
 const topMarginHeight = 150;
 
 const tileFallSpeed = 100; // px per second
 
 function drawWaterfall(ctx) {
     ctx.fillStyle = "#D6FBFF";
-    ctx.fillRect(0, 0, 450, 710);
+    ctx.fillRect(0, 0, sideMarginWidth * 2 + 10 * totalTileWidth, topMarginHeight + tileHeight * 10 + bottomMarginHeight);
     ctx.fillStyle = "#3A86FF";
-    ctx.fillRect(0, 150, 450, 560);
+    ctx.fillRect(0, topMarginHeight, sideMarginWidth * 2 + 10 * totalTileWidth, tileHeight * 10 + bottomMarginHeight);
     ctx.fillStyle = "#69BF4A";
-    ctx.fillRect(0, 130, 20, 580);
-    ctx.fillRect(430, 130, 20, 580);
+    ctx.fillRect(0, topMarginHeight - 20, sideMarginWidth - 5, 20 + tileHeight * 10 + bottomMarginHeight);
+    ctx.fillRect(sideMarginWidth + 5 + 10 * totalTileWidth, topMarginHeight - 20, sideMarginWidth - 5, 20 + tileHeight * 10 + bottomMarginHeight);
 }
 
 function drawCartridge(ctx, position) {
     const baseX = sideMarginWidth + position * totalTileWidth;
-    const baseY = topMarginHeight + 10 * tileHeight;
+    const baseY = topMarginHeight + 9 * tileHeight;
     ctx.beginPath();
-    ctx.moveTo(baseX, baseY + 0);
+    ctx.moveTo(baseX, baseY + tileHeight / 2);
     ctx.lineTo(baseX, baseY + tileHeight);
     ctx.lineTo(baseX + tileWidth, baseY + tileHeight);
-    ctx.lineTo(baseX + tileWidth + tileMarginWidth / 2, baseY + tileHeight * 2 / 5);
+    ctx.lineTo(baseX + tileWidth + tileMarginWidth / 2, baseY + tileHeight * 4 / 5);
     ctx.lineTo(baseX + tileWidth + tileMarginWidth, baseY + tileHeight);
     ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth, baseY + tileHeight);
-    ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth * 1.5, baseY + tileHeight * 2 / 5);
+    ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth * 1.5, baseY + tileHeight * 4 / 5);
     ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth * 2, baseY + tileHeight);
     ctx.lineTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight);
-    ctx.lineTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + 0);
-    ctx.bezierCurveTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + 0,
-                        baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight * 2 / 5,
+    ctx.lineTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight / 2);
+    ctx.bezierCurveTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight / 2,
+                        baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight * 4 / 5,
                         baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight);
     ctx.bezierCurveTo(baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight + 10,
                         baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 10,
@@ -57,9 +57,9 @@ function drawCartridge(ctx, position) {
     ctx.bezierCurveTo(baseX, baseY + tileHeight + 5,
                         baseX - tileMarginWidth, baseY + tileHeight + 10,
                         baseX - tileMarginWidth, baseY + tileHeight);
-    ctx.bezierCurveTo(baseX - tileMarginWidth, baseY + tileHeight * 2 / 5,
-                        baseX, baseY + 0,
-                        baseX, baseY + 0);
+    ctx.bezierCurveTo(baseX - tileMarginWidth, baseY + tileHeight * 4 / 5,
+                        baseX, baseY + tileHeight / 2,
+                        baseX, baseY + tileHeight / 2);
     ctx.closePath();
     ctx.fillStyle = "#B28440";
     ctx.fill();
