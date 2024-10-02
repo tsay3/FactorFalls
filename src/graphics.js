@@ -1,5 +1,15 @@
 // The graphics file handles the drawing of the game model onto the canvas of the webpage.
 
+const tileWidth = 34;
+const tileMarginWidth = 6;
+var totalTileWidth = tileWidth + tileMarginWidth;
+const tileHeight = 50;
+const sideMarginWidth = 25;
+const bottomMarginHeight = 60;
+const topMarginHeight = 150;
+
+const tileFallSpeed = 100; // px per second
+
 function drawWaterfall(ctx) {
     ctx.fillStyle = "#D6FBFF";
     ctx.fillRect(0, 0, 450, 710);
@@ -10,8 +20,52 @@ function drawWaterfall(ctx) {
     ctx.fillRect(430, 130, 20, 580);
 }
 
-function drawCartridge(ctx) {
-
+function drawCartridge(ctx, position) {
+    const baseX = sideMarginWidth + position * totalTileWidth;
+    const baseY = topMarginHeight + 10 * tileHeight;
+    ctx.beginPath();
+    ctx.moveTo(baseX, baseY + 0);
+    ctx.lineTo(baseX, baseY + tileHeight);
+    ctx.lineTo(baseX + tileWidth, baseY + tileHeight);
+    ctx.lineTo(baseX + tileWidth + tileMarginWidth / 2, baseY + tileHeight * 2 / 5);
+    ctx.lineTo(baseX + tileWidth + tileMarginWidth, baseY + tileHeight);
+    ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth, baseY + tileHeight);
+    ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth * 1.5, baseY + tileHeight * 2 / 5);
+    ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth * 2, baseY + tileHeight);
+    ctx.lineTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight);
+    ctx.lineTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + 0);
+    ctx.bezierCurveTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + 0,
+                        baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight * 2 / 5,
+                        baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight);
+    ctx.bezierCurveTo(baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight + 10,
+                        baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 10,
+                        baseX + 2.5 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 10);
+    // 2nd knuckle
+    ctx.bezierCurveTo(baseX + 2.25 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 10,
+                        baseX + 2.25 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 5,
+                        baseX + 2 * tileWidth + tileMarginWidth * 1.5, baseY + tileHeight + 5);
+    ctx.bezierCurveTo(baseX + 1.75 * tileWidth + tileMarginWidth, baseY + tileHeight + 5,
+                        baseX + 1.75 * tileWidth + tileMarginWidth, baseY + tileHeight + 10,
+                        baseX + 1.5 * tileWidth + tileMarginWidth, baseY + tileHeight + 10);
+    // 1st knuckle
+    ctx.bezierCurveTo(baseX + 1.25 * tileWidth + tileMarginWidth, baseY + tileHeight + 10,
+                        baseX + 1.25 * tileWidth + tileMarginWidth, baseY + tileHeight + 5,
+                        baseX + tileWidth + tileMarginWidth * .5, baseY + tileHeight + 5);
+    ctx.bezierCurveTo(baseX + .75 * tileWidth, baseY + tileHeight + 5,
+                        baseX + .75 * tileWidth, baseY + tileHeight + 10,
+                        baseX + .5 * tileWidth, baseY + tileHeight + 10);
+    ctx.bezierCurveTo(baseX, baseY + tileHeight + 5,
+                        baseX - tileMarginWidth, baseY + tileHeight + 10,
+                        baseX - tileMarginWidth, baseY + tileHeight);
+    ctx.bezierCurveTo(baseX - tileMarginWidth, baseY + tileHeight * 2 / 5,
+                        baseX, baseY + 0,
+                        baseX, baseY + 0);
+    ctx.closePath();
+    ctx.fillStyle = "#B28440";
+    ctx.fill();
+    ctx.strokeStyle = "#372812";
+    ctx.stroke();
+    
 }
 
 function drawSatchel(ctx) {
@@ -24,6 +78,7 @@ const satchelCanvas = document.getElementById("satchel");
 
 if (waterfallCanvas.getContext) {
     drawWaterfall(waterfallCanvas.getContext("2d"));
+    drawCartridge(waterfallCanvas.getContext("2d"), 4);
 }
 if (satchelCanvas.getContext) {
     drawSatchel(satchelCanvas.getContext("2d"));
