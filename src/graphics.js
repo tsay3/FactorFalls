@@ -10,7 +10,11 @@ const topMarginHeight = 150;
 
 const tileFallSpeed = 100; // px per second
 
-function drawWaterfall(ctx) {
+const waterfallCanvas = document.getElementById("waterfallCanvas");
+const satchelCanvas = document.getElementById("satchelCanvas");
+
+function drawWaterfall() {
+    ctx = waterfallCanvas.getContext("2d");
     ctx.fillStyle = "#D6FBFF";
     ctx.fillRect(0, 0, sideMarginWidth * 2 + 10 * totalTileWidth, topMarginHeight + tileHeight * 10 + bottomMarginHeight);
     ctx.fillStyle = "#3A86FF";
@@ -20,8 +24,23 @@ function drawWaterfall(ctx) {
     ctx.fillRect(sideMarginWidth + 5 + 10 * totalTileWidth, topMarginHeight - 20, sideMarginWidth - 5, 20 + tileHeight * 10 + bottomMarginHeight);
 }
 
-function drawCartridge(ctx, position) {
-    const baseX = sideMarginWidth + position * totalTileWidth;
+var cartridgeAnimIndex = 0;
+const cartridgeAnimationX = [0, 1, 3, 7, 13, totalTileWidth-6];
+
+function startCartridgeAnimation(){
+    cartridgeAnimIndex = 5;
+}
+
+function updateCartridgeAnimation() {
+    if (cartridgeAnimIndex > 0) {
+        cartridgeAnimIndex--;
+    }
+}
+
+function drawCartridge(position, direction) {
+    ctx = waterfallCanvas.getContext("2d");
+    // left = -1, so offset is added... right = 1, so offset is subtracted
+    const baseX = sideMarginWidth + (position * totalTileWidth) - direction * cartridgeAnimationX[cartridgeAnimIndex];
     const baseY = topMarginHeight + 9 * tileHeight;
     ctx.beginPath();
     ctx.moveTo(baseX, baseY + tileHeight / 2);
@@ -66,22 +85,21 @@ function drawCartridge(ctx, position) {
     ctx.strokeStyle = "#372812";
     ctx.stroke();
     
+    console.log("Cartridge drawn.");
+
+    updateCartridgeAnimation();
 }
 
-function drawSatchel(ctx) {
+function drawSatchel() {
+    ctx = satchelCanvas.getContext("2d");
     ctx.fillStyle = "#C49A70";
     ctx.fillRect(0, 0, 250, 710);
 }
 
-const waterfallCanvas = document.getElementById("waterfall");
-const satchelCanvas = document.getElementById("satchel");
-
 if (waterfallCanvas.getContext) {
-    drawWaterfall(waterfallCanvas.getContext("2d"));
-    drawCartridge(waterfallCanvas.getContext("2d"), 4);
+    drawWaterfall();
+    drawCartridge(4);
 }
 if (satchelCanvas.getContext) {
-    drawSatchel(satchelCanvas.getContext("2d"));
+    drawSatchel();
 }
-
-console.log("Drawn to canvas.");
