@@ -4,12 +4,12 @@ function handleMousedown(event) {
 
     console.log("Mouse event detected.");
 
-    if (event.clientX < (waterfallCanvas.clientWidth * 3 / 7)) {
+    if (event.clientX < (WATERFALL_CANVAS.clientWidth * 3 / 7)) {
         moveCartridgeLeft();
-    } else if (event.clientX > (waterfallCanvas.clientWidth * 4 / 7)) {
+    } else if (event.clientX > (WATERFALL_CANVAS.clientWidth * 4 / 7)) {
         moveCartridgeRight();
     }
 }
 
-// defined in graphics
-waterfallCanvas.addEventListener('mousedown', handleMousedown);
+// defined in constants
+WATERFALL_CANVAS.addEventListener('mousedown', handleMousedown);

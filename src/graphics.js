@@ -1,28 +1,44 @@
 // The graphics file handles the drawing of the game model onto the canvas of the webpage.
 
-const tileWidth = 34;
-const tileMarginWidth = 6;
-var totalTileWidth = tileWidth + tileMarginWidth;
-const tileHeight = 50;
-const sideMarginWidth = 25;
-const bottomMarginHeight = 30;
-const topMarginHeight = 150;
-
-const tileFallSpeed = 100; // px per second
-
-const waterfallCanvas = document.getElementById("waterfallCanvas");
-const satchelCanvas = document.getElementById("satchelCanvas");
+/**
+ * Waterfall display & animation
+ */
 
 function drawWaterfall() {
-    ctx = waterfallCanvas.getContext("2d");
+    ctx = WATERFALL_CANVAS.getContext("2d");
     ctx.fillStyle = "#D6FBFF";
-    ctx.fillRect(0, 0, sideMarginWidth * 2 + 10 * totalTileWidth, topMarginHeight + tileHeight * 10 + bottomMarginHeight);
+    ctx.fillRect(0, 0, SIDE_MARGIN_WIDTH * 2 + 10 * totalTileWidth, TOP_MARGIN_HEIGHT + TILE_HEIGHT * 10 + BOTTOM_MARGIN_HEIGHT);
     ctx.fillStyle = "#3A86FF";
-    ctx.fillRect(0, topMarginHeight, sideMarginWidth * 2 + 10 * totalTileWidth, tileHeight * 10 + bottomMarginHeight);
+    ctx.fillRect(0, TOP_MARGIN_HEIGHT, SIDE_MARGIN_WIDTH * 2 + 10 * totalTileWidth, TILE_HEIGHT * 10 + BOTTOM_MARGIN_HEIGHT);
     ctx.fillStyle = "#69BF4A";
-    ctx.fillRect(0, topMarginHeight - 20, sideMarginWidth - 5, 20 + tileHeight * 10 + bottomMarginHeight);
-    ctx.fillRect(sideMarginWidth + 5 + 10 * totalTileWidth, topMarginHeight - 20, sideMarginWidth - 5, 20 + tileHeight * 10 + bottomMarginHeight);
+    ctx.fillRect(0, TOP_MARGIN_HEIGHT - 20, SIDE_MARGIN_WIDTH - 5, 20 + TILE_HEIGHT * 10 + BOTTOM_MARGIN_HEIGHT);
+    ctx.fillRect(SIDE_MARGIN_WIDTH + 5 + 10 * totalTileWidth, TOP_MARGIN_HEIGHT - 20, SIDE_MARGIN_WIDTH - 5, 20 + TILE_HEIGHT * 10 + BOTTOM_MARGIN_HEIGHT);
 }
+
+/**
+ * 
+ * Digits display and animation
+ */
+
+function drawDigits(digitList) {
+    ctx = WATERFALL_CANVAS.getContext("2d");
+    digitList.forEach((digit) => {
+        ctx.fillStyle = digit.borderColor;
+        ctx.fillRect(digit.x, digit.y, digit.width, digit.height);
+        ctx.fillStyle = digit.innerColor;
+        ctx.fillRect(digit.x + digit.borderWidth, digit.y + digit.borderWidth, digit.width - 2 * digit.borderWidth, digit.height - 2 * digit.borderWidth);
+        ctx.fillStyle = digit.numberColor;
+        ctx.textBaseline = "top";
+        ctx.font = "bold 40px sans-serif"
+        ctx.fillText(digit.value, digit.x + digit.borderWidth, digit.y + digit.borderWidth + 5);
+    });
+}
+
+/**
+ * 
+ * Cartridge display & animation
+ * 
+ */
 
 var cartridgeAnimIndex = 0;
 const cartridgeAnimationX = [0, 1, 3, 7, 13, totalTileWidth-6];
@@ -38,47 +54,47 @@ function updateCartridgeAnimation() {
 }
 
 function drawCartridge(position, direction) {
-    ctx = waterfallCanvas.getContext("2d");
+    ctx = WATERFALL_CANVAS.getContext("2d");
     // left = -1, so offset is added... right = 1, so offset is subtracted
-    const baseX = sideMarginWidth + (position * totalTileWidth) - direction * cartridgeAnimationX[cartridgeAnimIndex];
-    const baseY = topMarginHeight + 9 * tileHeight;
+    const baseX = SIDE_MARGIN_WIDTH + (position * totalTileWidth) - direction * cartridgeAnimationX[cartridgeAnimIndex];
+    const baseY = TOP_MARGIN_HEIGHT + 9 * TILE_HEIGHT;
     ctx.beginPath();
-    ctx.moveTo(baseX, baseY + tileHeight / 2);
-    ctx.lineTo(baseX, baseY + tileHeight);
-    ctx.lineTo(baseX + tileWidth, baseY + tileHeight);
-    ctx.lineTo(baseX + tileWidth + tileMarginWidth / 2, baseY + tileHeight * 4 / 5);
-    ctx.lineTo(baseX + tileWidth + tileMarginWidth, baseY + tileHeight);
-    ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth, baseY + tileHeight);
-    ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth * 1.5, baseY + tileHeight * 4 / 5);
-    ctx.lineTo(baseX + 2 * tileWidth + tileMarginWidth * 2, baseY + tileHeight);
-    ctx.lineTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight);
-    ctx.lineTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight / 2);
-    ctx.bezierCurveTo(baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight / 2,
-                        baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight * 4 / 5,
-                        baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight);
-    ctx.bezierCurveTo(baseX + 3 * tileWidth + tileMarginWidth * 3, baseY + tileHeight + 10,
-                        baseX + 3 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 10,
-                        baseX + 2.5 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 10);
+    ctx.moveTo(baseX, baseY + TILE_HEIGHT / 2);
+    ctx.lineTo(baseX, baseY + TILE_HEIGHT);
+    ctx.lineTo(baseX + TILE_WIDTH, baseY + TILE_HEIGHT);
+    ctx.lineTo(baseX + TILE_WIDTH + TILE_MARGIN_WIDTH / 2, baseY + TILE_HEIGHT * 4 / 5);
+    ctx.lineTo(baseX + TILE_WIDTH + TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT);
+    ctx.lineTo(baseX + 2 * TILE_WIDTH + TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT);
+    ctx.lineTo(baseX + 2 * TILE_WIDTH + TILE_MARGIN_WIDTH * 1.5, baseY + TILE_HEIGHT * 4 / 5);
+    ctx.lineTo(baseX + 2 * TILE_WIDTH + TILE_MARGIN_WIDTH * 2, baseY + TILE_HEIGHT);
+    ctx.lineTo(baseX + 3 * TILE_WIDTH + TILE_MARGIN_WIDTH * 2, baseY + TILE_HEIGHT);
+    ctx.lineTo(baseX + 3 * TILE_WIDTH + TILE_MARGIN_WIDTH * 2, baseY + TILE_HEIGHT / 2);
+    ctx.bezierCurveTo(baseX + 3 * TILE_WIDTH + TILE_MARGIN_WIDTH * 2, baseY + TILE_HEIGHT / 2,
+                        baseX + 3 * TILE_WIDTH + TILE_MARGIN_WIDTH * 3, baseY + TILE_HEIGHT * 4 / 5,
+                        baseX + 3 * TILE_WIDTH + TILE_MARGIN_WIDTH * 3, baseY + TILE_HEIGHT);
+    ctx.bezierCurveTo(baseX + 3 * TILE_WIDTH + TILE_MARGIN_WIDTH * 3, baseY + TILE_HEIGHT + 10,
+                        baseX + 3 * TILE_WIDTH + TILE_MARGIN_WIDTH * 2, baseY + TILE_HEIGHT + 10,
+                        baseX + 2.5 * TILE_WIDTH + TILE_MARGIN_WIDTH * 2, baseY + TILE_HEIGHT + 10);
     // 2nd knuckle
-    ctx.bezierCurveTo(baseX + 2.25 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 10,
-                        baseX + 2.25 * tileWidth + tileMarginWidth * 2, baseY + tileHeight + 5,
-                        baseX + 2 * tileWidth + tileMarginWidth * 1.5, baseY + tileHeight + 5);
-    ctx.bezierCurveTo(baseX + 1.75 * tileWidth + tileMarginWidth, baseY + tileHeight + 5,
-                        baseX + 1.75 * tileWidth + tileMarginWidth, baseY + tileHeight + 10,
-                        baseX + 1.5 * tileWidth + tileMarginWidth, baseY + tileHeight + 10);
+    ctx.bezierCurveTo(baseX + 2.25 * TILE_WIDTH + TILE_MARGIN_WIDTH * 2, baseY + TILE_HEIGHT + 10,
+                        baseX + 2.25 * TILE_WIDTH + TILE_MARGIN_WIDTH * 2, baseY + TILE_HEIGHT + 5,
+                        baseX + 2 * TILE_WIDTH + TILE_MARGIN_WIDTH * 1.5, baseY + TILE_HEIGHT + 5);
+    ctx.bezierCurveTo(baseX + 1.75 * TILE_WIDTH + TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT + 5,
+                        baseX + 1.75 * TILE_WIDTH + TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT + 10,
+                        baseX + 1.5 * TILE_WIDTH + TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT + 10);
     // 1st knuckle
-    ctx.bezierCurveTo(baseX + 1.25 * tileWidth + tileMarginWidth, baseY + tileHeight + 10,
-                        baseX + 1.25 * tileWidth + tileMarginWidth, baseY + tileHeight + 5,
-                        baseX + tileWidth + tileMarginWidth * .5, baseY + tileHeight + 5);
-    ctx.bezierCurveTo(baseX + .75 * tileWidth, baseY + tileHeight + 5,
-                        baseX + .75 * tileWidth, baseY + tileHeight + 10,
-                        baseX + .5 * tileWidth, baseY + tileHeight + 10);
-    ctx.bezierCurveTo(baseX, baseY + tileHeight + 5,
-                        baseX - tileMarginWidth, baseY + tileHeight + 10,
-                        baseX - tileMarginWidth, baseY + tileHeight);
-    ctx.bezierCurveTo(baseX - tileMarginWidth, baseY + tileHeight * 4 / 5,
-                        baseX, baseY + tileHeight / 2,
-                        baseX, baseY + tileHeight / 2);
+    ctx.bezierCurveTo(baseX + 1.25 * TILE_WIDTH + TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT + 10,
+                        baseX + 1.25 * TILE_WIDTH + TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT + 5,
+                        baseX + TILE_WIDTH + TILE_MARGIN_WIDTH * .5, baseY + TILE_HEIGHT + 5);
+    ctx.bezierCurveTo(baseX + .75 * TILE_WIDTH, baseY + TILE_HEIGHT + 5,
+                        baseX + .75 * TILE_WIDTH, baseY + TILE_HEIGHT + 10,
+                        baseX + .5 * TILE_WIDTH, baseY + TILE_HEIGHT + 10);
+    ctx.bezierCurveTo(baseX, baseY + TILE_HEIGHT + 5,
+                        baseX - TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT + 10,
+                        baseX - TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT);
+    ctx.bezierCurveTo(baseX - TILE_MARGIN_WIDTH, baseY + TILE_HEIGHT * 4 / 5,
+                        baseX, baseY + TILE_HEIGHT / 2,
+                        baseX, baseY + TILE_HEIGHT / 2);
     ctx.closePath();
     ctx.fillStyle = "#B28440";
     ctx.fill();
@@ -90,16 +106,28 @@ function drawCartridge(position, direction) {
     updateCartridgeAnimation();
 }
 
+/**
+ * 
+ * Satchel drawing
+ * 
+ */
+
 function drawSatchel() {
-    ctx = satchelCanvas.getContext("2d");
+    ctx = SATCHEL_CANVAS.getContext("2d");
     ctx.fillStyle = "#C49A70";
     ctx.fillRect(0, 0, 250, 710);
 }
 
-if (waterfallCanvas.getContext) {
+/**
+ * 
+ * Initial drawing
+ * 
+ */
+
+if (WATERFALL_CANVAS.getContext) {
     drawWaterfall();
     drawCartridge(4);
 }
-if (satchelCanvas.getContext) {
+if (SATCHEL_CANVAS.getContext) {
     drawSatchel();
 }
