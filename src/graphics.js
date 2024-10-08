@@ -20,17 +20,28 @@ function drawWaterfall() {
  * Digits display and animation
  */
 
-function drawDigits(digitList) {
+function drawDigit(digit) {
     ctx = WATERFALL_CANVAS.getContext("2d");
+    ctx.fillStyle = digit.borderColor;
+    ctx.fillRect(digit.x, digit.y, digit.width, digit.height);
+    ctx.fillStyle = digit.innerColor;
+    ctx.fillRect(digit.x + digit.borderWidth, digit.y + digit.borderWidth, digit.width - 2 * digit.borderWidth, digit.height - 2 * digit.borderWidth);
+    ctx.fillStyle = digit.numberColor;
+    ctx.textBaseline = "top";
+    ctx.font = "bold 40px sans-serif"
+    ctx.fillText(digit.value, digit.x + digit.borderWidth + 1, digit.y + digit.borderWidth + 1);
+}
+
+function drawDigits(digitList) {
     digitList.forEach((digit) => {
-        ctx.fillStyle = digit.borderColor;
-        ctx.fillRect(digit.x, digit.y, digit.width, digit.height);
-        ctx.fillStyle = digit.innerColor;
-        ctx.fillRect(digit.x + digit.borderWidth, digit.y + digit.borderWidth, digit.width - 2 * digit.borderWidth, digit.height - 2 * digit.borderWidth);
-        ctx.fillStyle = digit.numberColor;
-        ctx.textBaseline = "top";
-        ctx.font = "bold 40px sans-serif"
-        ctx.fillText(digit.value, digit.x + digit.borderWidth, digit.y + digit.borderWidth + 5);
+        drawDigit(digit);
+    });
+}
+
+function drawCartridgeDigits(offset, digitList) {
+    digitList.forEach((digit) => {
+        digit.animationX = offset;
+        drawDigit(digit);
     });
 }
 
@@ -53,7 +64,14 @@ function updateCartridgeAnimation() {
     }
 }
 
-function drawCartridge(position, direction) {
+function drawCartridge(position, direction, tileArray) {
+    tileArray.forEach((column) => {
+        drawCartridgeDigits(-1 * direction * cartridgeAnimationX[cartridgeAnimIndex], column);
+    });
+    drawCartridgeContainer(position, direction);
+}
+
+function drawCartridgeContainer(position, direction) {
     ctx = WATERFALL_CANVAS.getContext("2d");
     // left = -1, so offset is added... right = 1, so offset is subtracted
     const baseX = SIDE_MARGIN_WIDTH + (position * totalTileWidth) - direction * cartridgeAnimationX[cartridgeAnimIndex];
@@ -126,7 +144,7 @@ function drawSatchel() {
 
 if (WATERFALL_CANVAS.getContext) {
     drawWaterfall();
-    drawCartridge(4);
+    drawCartridge(4, 0, []);
 }
 if (SATCHEL_CANVAS.getContext) {
     drawSatchel();

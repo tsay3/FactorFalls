@@ -5,8 +5,8 @@ class Box {
         this._y = 9999;
         this.borderColor = "#CA8363";
         this.innerColor = "#FFEFCF";
-        this.width = 34;
-        this.height = 60;
+        this.width = TILE_WIDTH;
+        this.height = TILE_HEIGHT;
         this.borderWidth = 5;
         this.numberColor = "#7D969F";
     }

@@ -15,6 +15,7 @@ function moveCartridgeLeft() {
     if (cartridgePosition > 0) {
         cartridgeDirection = -1;
         cartridgePosition--;
+        updateCartridgeTiles(-1);
         startCartridgeAnimation();
     }
 }
@@ -23,47 +24,61 @@ function moveCartridgeRight() {
     if (cartridgePosition < (totalPositionsWide - 3)) {
         cartridgeDirection = 1;
         cartridgePosition++;
+        updateCartridgeTiles(1);
         startCartridgeAnimation();
     }
 }
 
-/**
- * Initialize tiles
- */
-
-for (let i = 0; i < 10; i++) {
-    offScreenTiles.push(new Digit(0));
+function updateCartridgeTiles(offset) {
+    cartridgeTiles.forEach((column) => {
+        column.forEach((digit) => {
+            digit.gameX += offset;
+        })
+    })
 }
 
-let updateTime = document.timeline.currentTime;
-let digitAddTime = document.timeline.currentTime;
-let digitNum = 0;
+/**
+ * Update a falling waterfall tile.
+ * Returns true if it remains a waterfall tile.
+ */
+function updateFallingTile(digit) {
+    digit.animationY += TILE_FALL_SPEED / 1000 * (document.timeline.currentTime - updateTime);
+    while (digit.animationY > TILE_HEIGHT) {
+        digit.gameY++;
+        if (digit.gameX >= cartridgePosition && digit.gameX <= cartridgePosition + 2) {
+            // Digit is within the cartridge
+            let digitInCartridgePosition = (digit.gameX - cartridgePosition);
+            if (10 - (digit.gameY + 1) == cartridgeTiles[digitInCartridgePosition].length) {
+                cartridgeTiles[digitInCartridgePosition].push(digit);
+                digit.animationY = 0;
+                return false;
+            }
+        }
+        digit.animationY -= TILE_HEIGHT;
+    }
+    if (digit.gameY > totalPositionsHigh + 1) {
+        return false;
+    }
+    return true;
+}
 
 function update() {
     if ((document.timeline.currentTime - updateTime) / 30 > 1) {
-        waterfallTiles.forEach((digit) => {
-            digit.animationY += TILE_FALL_SPEED / 1000 * (document.timeline.currentTime - updateTime);
-            while (digit.animationY > TILE_HEIGHT) {
-                digit.gameY++;
-                digit.animationY -= TILE_HEIGHT;
-            }
-            
-        });
         let newWaterfallTiles = [];
-        for (let i = 0; i < waterfallTiles.length; i++) {
-            let digit = waterfallTiles[i];
-            if (digit.gameY <= totalPositionsHigh + 1) {
+        waterfallTiles.forEach((digit) => {
+            if (updateFallingTile(digit)) {
                 newWaterfallTiles.push(digit);
-            } else {
+            }
+            if (digit.gameY > totalPositionsHigh + 1) {
                 offScreenTiles.push(digit);
             }
-        }
+        });
         waterfallTiles = newWaterfallTiles;
         updateCartridgeAnimation();
 
         drawWaterfall();
         drawDigits(waterfallTiles);
-        drawCartridge(cartridgePosition, cartridgeDirection);
+        drawCartridge(cartridgePosition, cartridgeDirection, cartridgeTiles);
         updateTime = document.timeline.currentTime;
     }
     
@@ -81,5 +96,17 @@ function update() {
     }
     requestAnimationFrame(update);
 }
+
+/**
+ * Initialize tiles
+ */
+
+for (let i = 0; i < 10; i++) {
+    offScreenTiles.push(new Digit(0));
+}
+
+let updateTime = document.timeline.currentTime;
+let digitAddTime = document.timeline.currentTime;
+let digitNum = 0;
 
 requestAnimationFrame(update);
