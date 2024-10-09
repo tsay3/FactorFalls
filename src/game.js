@@ -1,9 +1,6 @@
 // The game file controls the internal model that the game is built on.
 
-const totalPositionsWide = 10;
-const totalPositionsHigh = 10;
-
-let cartridgePosition = 4;
+let cartridgePosition = Math.floor(TOTAL_POSITIONS_WIDE / 2 - 1);
 let cartridgeDirection = 0;
 
 let offScreenTiles = [];
@@ -21,7 +18,7 @@ function moveCartridgeLeft() {
 }
 
 function moveCartridgeRight() {
-    if (cartridgePosition < (totalPositionsWide - 3)) {
+    if (cartridgePosition < (TOTAL_POSITIONS_WIDE - 3)) {
         cartridgeDirection = 1;
         cartridgePosition++;
         updateCartridgeTiles(1);
@@ -42,21 +39,21 @@ function updateCartridgeTiles(offset) {
  * Returns true if it remains a waterfall tile.
  */
 function updateFallingTile(digit) {
-    digit.animationY += TILE_FALL_SPEED / 1000 * (document.timeline.currentTime - updateTime);
-    while (digit.animationY > TILE_HEIGHT) {
+    digit.offsetY += TILE_FALL_SPEED / 1000 * (document.timeline.currentTime - updateTime);
+    while (digit.offsetY > TILE_HEIGHT) {
         digit.gameY++;
         if (digit.gameX >= cartridgePosition && digit.gameX <= cartridgePosition + 2) {
             // Digit is within the cartridge
             let digitInCartridgePosition = (digit.gameX - cartridgePosition);
             if (10 - (digit.gameY + 1) == cartridgeTiles[digitInCartridgePosition].length) {
                 cartridgeTiles[digitInCartridgePosition].push(digit);
-                digit.animationY = 0;
+                digit.offsetY = 0;
                 return false;
             }
         }
-        digit.animationY -= TILE_HEIGHT;
+        digit.offsetY -= TILE_HEIGHT;
     }
-    if (digit.gameY > totalPositionsHigh + 1) {
+    if (digit.gameY > TOTAL_POSITIONS_HIGH + 1) {
         return false;
     }
     return true;
@@ -69,14 +66,14 @@ function update() {
             if (updateFallingTile(digit)) {
                 newWaterfallTiles.push(digit);
             }
-            if (digit.gameY > totalPositionsHigh + 1) {
+            if (digit.gameY > TOTAL_POSITIONS_HIGH + 1) {
                 offScreenTiles.push(digit);
             }
         });
         waterfallTiles = newWaterfallTiles;
         updateCartridgeAnimation();
 
-        drawWaterfall();
+        drawWaterfallBackdrop();
         drawDigits(waterfallTiles);
         drawCartridge(cartridgePosition, cartridgeDirection, cartridgeTiles);
         updateTime = document.timeline.currentTime;
@@ -85,7 +82,7 @@ function update() {
     if ((document.timeline.currentTime - digitAddTime) / 1000 > 1) {
         if (offScreenTiles.length > 0) {
             let digit = offScreenTiles.pop();
-            digit.gameX = Math.floor(Math.random() * totalPositionsWide);
+            digit.gameX = Math.floor(Math.random() * TOTAL_POSITIONS_WIDE);
             digit.gameY = 0;
             digit.value = digitNum;
             digitNum++;

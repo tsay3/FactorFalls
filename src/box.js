@@ -12,11 +12,11 @@ class Box {
     }
 
     get x() {
-        return this.x;
+        return this._x;
     }
 
     get y() {
-        return this.y;
+        return this._y;
     }
 
     /**
@@ -24,7 +24,7 @@ class Box {
      */
 
     set x(newX) {
-        this.x = newX;
+        this._x = newX;
     }
 
     /**
@@ -32,7 +32,7 @@ class Box {
      */
 
     set y(newY) {
-        this.y = newY;
+        this._y = newY;
     }
 }
 
@@ -41,57 +41,13 @@ class Digit extends Box {
         super(value);
         this.gameX = -1;
         this.gameY = -5;
-        this.animationX = 0;
-        this.animationY = 0;
+        this.offsetX = 0;
+        this.offsetY = 0;
     }
-
-    // /**
-    //  * @param {number} newX
-    //  */
-    // set gameX(newX) {
-    //     this.gameX = newX;
-    // }
-
-    // /**
-    //  * @param {number} newY
-    //  */
-    // set gameY(newY) {
-    //     this.gameY = newY;
-    // }
-
-    // /**
-    //  * @param {number} newX
-    //  */
-    // set animationX(newX) {
-    //     this.animationX = newX;
-    // }
-
-    // /**
-    //  * @param {number} newY
-    //  */
-    // set animationY(newY) {
-    //     this.animationY = newY;
-    // }
-
-    // /**
-    //  * @param {number} newX
-    //  */
-    // set x(newX) {
-    //     this.gameX = Math.floor((newX - SIDE_MARGIN_WIDTH) / totalTileWidth);
-    //     this.animationX = (newX - SIDE_MARGIN_WIDTH) - this.gameX * totalTileWidth;
-    // }
-
-    // /**
-    //  * @param {number} newY
-    //  */
-    // set y(newY) {
-    //     this.gameX = Math.floor((newY - TOP_MARGIN_HEIGHT) / TILE_HEIGHT);
-    //     this.animationX = (newY - TOP_MARGIN_HEIGHT) - this.gameY * TILE_HEIGHT;
-    // }
 
     get x() {
         if (this.gameX >= 0) {
-            return SIDE_MARGIN_WIDTH + this.gameX * totalTileWidth + this.animationX;
+            return SIDE_MARGIN_WIDTH + this.gameX * TOTAL_TILE_WIDTH + this.offsetX;
         } else {
             return -100;
         }
@@ -100,10 +56,10 @@ class Digit extends Box {
     get y() {
         if (this.gameY >= 0){
             // on the waterfall
-            return TOP_MARGIN_HEIGHT + this.gameY * TILE_HEIGHT + this.animationY;
+            return TOP_MARGIN_HEIGHT + this.gameY * TILE_HEIGHT + this.offsetY;
         } else {
             // in the river
-            return TOP_MARGIN_HEIGHT + this.gameY * TILE_HEIGHT * -0.25 - this.animationY * 0.25;
+            return TOP_MARGIN_HEIGHT + this.gameY * TILE_HEIGHT * -0.25 - this.offsetY * 0.25;
         }
     }
 }

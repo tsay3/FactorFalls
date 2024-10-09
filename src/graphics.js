@@ -1,18 +1,43 @@
 // The graphics file handles the drawing of the game model onto the canvas of the webpage.
 
+let fontSize = "bold " + TOTAL_TILE_WIDTH + "px sans-serif"
+
 /**
  * Waterfall display & animation
  */
 
-function drawWaterfall() {
+function drawWaterfallBackdrop() {
+    drawSky();
+    drawWater();
+    drawRiverbanks();
+}
+
+function drawSky() {
     ctx = WATERFALL_CANVAS.getContext("2d");
     ctx.fillStyle = "#D6FBFF";
-    ctx.fillRect(0, 0, SIDE_MARGIN_WIDTH * 2 + 10 * totalTileWidth, TOP_MARGIN_HEIGHT + TILE_HEIGHT * 10 + BOTTOM_MARGIN_HEIGHT);
+    ctx.fillRect(0, 0,
+        SIDE_MARGIN_WIDTH * 2 + TOTAL_POSITIONS_WIDE * TOTAL_TILE_WIDTH,
+        TOP_MARGIN_HEIGHT + TILE_HEIGHT * (TOTAL_POSITIONS_HIGH - 1) + BOTTOM_MARGIN_HEIGHT);
+}
+
+function drawWater() {
+    ctx = WATERFALL_CANVAS.getContext("2d");
     ctx.fillStyle = "#3A86FF";
-    ctx.fillRect(0, TOP_MARGIN_HEIGHT, SIDE_MARGIN_WIDTH * 2 + 10 * totalTileWidth, TILE_HEIGHT * 10 + BOTTOM_MARGIN_HEIGHT);
+    ctx.fillRect(0, TOP_MARGIN_HEIGHT + TILE_HEIGHT,
+        SIDE_MARGIN_WIDTH * 2 + TOTAL_POSITIONS_WIDE * TOTAL_TILE_WIDTH,
+        TILE_HEIGHT * (TOTAL_POSITIONS_HIGH - 1) + BOTTOM_MARGIN_HEIGHT);
+}
+
+function drawRiverbanks() {
+    ctx = WATERFALL_CANVAS.getContext("2d");
     ctx.fillStyle = "#69BF4A";
-    ctx.fillRect(0, TOP_MARGIN_HEIGHT - 20, SIDE_MARGIN_WIDTH - 5, 20 + TILE_HEIGHT * 10 + BOTTOM_MARGIN_HEIGHT);
-    ctx.fillRect(SIDE_MARGIN_WIDTH + 5 + 10 * totalTileWidth, TOP_MARGIN_HEIGHT - 20, SIDE_MARGIN_WIDTH - 5, 20 + TILE_HEIGHT * 10 + BOTTOM_MARGIN_HEIGHT);
+    ctx.fillRect(0, TOP_MARGIN_HEIGHT - 20 + TILE_HEIGHT,
+        SIDE_MARGIN_WIDTH - 5,
+        20 + (TILE_HEIGHT - 1) * TOTAL_POSITIONS_HIGH + BOTTOM_MARGIN_HEIGHT);
+    ctx.fillRect(SIDE_MARGIN_WIDTH + 5 + TOTAL_POSITIONS_WIDE * TOTAL_TILE_WIDTH,
+        TOP_MARGIN_HEIGHT - 20 + TILE_HEIGHT,
+        SIDE_MARGIN_WIDTH - 5,
+        20 + (TILE_HEIGHT - 1) * TOTAL_POSITIONS_HIGH + BOTTOM_MARGIN_HEIGHT);
 }
 
 /**
@@ -28,7 +53,7 @@ function drawDigit(digit) {
     ctx.fillRect(digit.x + digit.borderWidth, digit.y + digit.borderWidth, digit.width - 2 * digit.borderWidth, digit.height - 2 * digit.borderWidth);
     ctx.fillStyle = digit.numberColor;
     ctx.textBaseline = "top";
-    ctx.font = "bold 40px sans-serif"
+    ctx.font = fontSize;
     ctx.fillText(digit.value, digit.x + digit.borderWidth + 1, digit.y + digit.borderWidth + 1);
 }
 
@@ -40,7 +65,7 @@ function drawDigits(digitList) {
 
 function drawCartridgeDigits(offset, digitList) {
     digitList.forEach((digit) => {
-        digit.animationX = offset;
+        digit.offsetX = offset;
         drawDigit(digit);
     });
 }
@@ -52,7 +77,7 @@ function drawCartridgeDigits(offset, digitList) {
  */
 
 var cartridgeAnimIndex = 0;
-const cartridgeAnimationX = [0, 1, 3, 7, 13, totalTileWidth-6];
+const cartridgeAnimationX = [0, 1, 3, 7, 13, TOTAL_TILE_WIDTH-6];
 
 function startCartridgeAnimation(){
     cartridgeAnimIndex = 5;
@@ -74,8 +99,8 @@ function drawCartridge(position, direction, tileArray) {
 function drawCartridgeContainer(position, direction) {
     ctx = WATERFALL_CANVAS.getContext("2d");
     // left = -1, so offset is added... right = 1, so offset is subtracted
-    const baseX = SIDE_MARGIN_WIDTH + (position * totalTileWidth) - direction * cartridgeAnimationX[cartridgeAnimIndex];
-    const baseY = TOP_MARGIN_HEIGHT + 9 * TILE_HEIGHT;
+    const baseX = SIDE_MARGIN_WIDTH + (position * TOTAL_TILE_WIDTH) - direction * cartridgeAnimationX[cartridgeAnimIndex];
+    const baseY = TOP_MARGIN_HEIGHT + (TOTAL_POSITIONS_HIGH - 3) * TILE_HEIGHT;
     ctx.beginPath();
     ctx.moveTo(baseX, baseY + TILE_HEIGHT / 2);
     ctx.lineTo(baseX, baseY + TILE_HEIGHT);
@@ -143,7 +168,7 @@ function drawSatchel() {
  */
 
 if (WATERFALL_CANVAS.getContext) {
-    drawWaterfall();
+    drawWaterfallBackdrop();
     drawCartridge(4, 0, []);
 }
 if (SATCHEL_CANVAS.getContext) {

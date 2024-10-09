@@ -1,6 +1,6 @@
 // The controller file handles user input.
 
-function handleMousedown(event) {
+function oldHandleMousedown(event) {
 
     console.log("Mouse event detected.");
 
@@ -11,5 +11,18 @@ function handleMousedown(event) {
     }
 }
 
+function handleMousedown(event) {
+    
+}
+
+function handleKeyboard(event) {
+    if (event.key == "ArrowLeft") {
+        moveCartridgeLeft();
+    } else if (event.key == "ArrowRight") {
+        moveCartridgeRight();
+    }
+}
+
 // defined in constants
 WATERFALL_CANVAS.addEventListener('mousedown', handleMousedown);
+window.addEventListener('keydown', handleKeyboard);
