@@ -93,9 +93,12 @@ function update() {
         if (offScreenTiles.length > 0) {
             addDigit();
         }
+        digitAddTime = document.timeline.currentTime;
     }
     requestAnimationFrame(update);
 }
+
+let digitNum = 0;
 
 function addDigit() {
     let digit = offScreenTiles.pop();
@@ -105,7 +108,6 @@ function addDigit() {
     digitNum++;
     if (digitNum >= 10) digitNum = 0;
     waterfallTiles.push(digit);
-    digitAddTime = document.timeline.currentTime;
 }
 
 /**
@@ -118,6 +120,5 @@ for (let i = 0; i < 10; i++) {
 
 let updateTime = document.timeline.currentTime;
 let digitAddTime = document.timeline.currentTime;
-let digitNum = 0;
 
 requestAnimationFrame(update);

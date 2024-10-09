@@ -7,3 +7,4 @@ This series of posts details the development of Factor Falls from the early stag
 2. [Moving/Animating the Cartridge](2.md)
 3. [Adding Digits](3.md)
 4. [Blocks in the Cartridge](4.md)
+5. [Code Cleanup, Game Refining](5.md)
