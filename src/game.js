@@ -26,6 +26,16 @@ function moveCartridgeRight() {
     }
 }
 
+function moveCartridgeTo(xPos) {
+    if (xPos >= 0 && xPos <= (TOTAL_POSITIONS_WIDE - 2)) {
+        console.log("moved to", xPos);
+        cartridgeDirection = xPos - cartridgePosition;
+        cartridgePosition = xPos;
+        updateCartridgeTiles(cartridgeDirection);
+        startCartridgeAnimation();
+    }
+}
+
 function updateCartridgeTiles(offset) {
     cartridgeTiles.forEach((column) => {
         column.forEach((digit) => {
@@ -79,19 +89,23 @@ function update() {
         updateTime = document.timeline.currentTime;
     }
     
-    if ((document.timeline.currentTime - digitAddTime) / 1000 > 1) {
+    if ((document.timeline.currentTime - digitAddTime) / DIGIT_SPAWN_RATE > 1) {
         if (offScreenTiles.length > 0) {
-            let digit = offScreenTiles.pop();
-            digit.gameX = Math.floor(Math.random() * TOTAL_POSITIONS_WIDE);
-            digit.gameY = 0;
-            digit.value = digitNum;
-            digitNum++;
-            if (digitNum >= 10) digitNum = 0;
-            waterfallTiles.push(digit);
-            digitAddTime = document.timeline.currentTime;
+            addDigit();
         }
     }
     requestAnimationFrame(update);
+}
+
+function addDigit() {
+    let digit = offScreenTiles.pop();
+    digit.gameX = Math.floor((Math.random() * TOTAL_POSITIONS_WIDE + Math.random() * TOTAL_POSITIONS_WIDE)/2);
+    digit.gameY = 0;
+    digit.value = digitNum;
+    digitNum++;
+    if (digitNum >= 10) digitNum = 0;
+    waterfallTiles.push(digit);
+    digitAddTime = document.timeline.currentTime;
 }
 
 /**

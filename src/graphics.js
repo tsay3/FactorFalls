@@ -143,8 +143,6 @@ function drawCartridgeContainer(position, direction) {
     ctx.fill();
     ctx.strokeStyle = "#372812";
     ctx.stroke();
-    
-    console.log("Cartridge drawn.");
 
     updateCartridgeAnimation();
 }

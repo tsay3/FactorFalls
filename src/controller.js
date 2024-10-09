@@ -1,21 +1,50 @@
 // The controller file handles user input.
 
-function oldHandleMousedown(event) {
+/**
+ * Mouse controls.
+ * @param {MouseEvent} event 
+ */
 
-    console.log("Mouse event detected.");
+function handleMousedown(event) {
+    xPosLower = Math.max(Math.floor((event.pageX - SIDE_MARGIN_WIDTH) / TOTAL_TILE_WIDTH - 1), 0);
+    xPos = Math.min(xPosLower, TOTAL_POSITIONS_WIDE - 3);
+    moveCartridgeTo(xPos);
+}
 
-    if (event.clientX < (WATERFALL_CANVAS.clientWidth * 3 / 7)) {
-        moveCartridgeLeft();
-    } else if (event.clientX > (WATERFALL_CANVAS.clientWidth * 4 / 7)) {
-        moveCartridgeRight();
+// function oldHandleMousedown(event) {
+//     if (event.pageX < (SCREEN_WIDTH * 3 / 7)) {
+//         moveCartridgeLeft();
+//     } else if (event.pageX > (SCREEN_WIDTH * 4 / 7)) {
+//         moveCartridgeRight();
+//     }
+// }
+
+/**
+ * Touch controls.
+ */
+let numberOfTouches = 0;
+
+function handleTouchstart() {
+    numberOfTouches++;
+}
+
+function handleTouchend() {
+    numberOfTouches--;
+}
+
+function handleTouchmove(event) {
+    if (numberOfTouches == 1) {
+        xPos = Math.min(Math.floor((event.pageX - SIDE_MARGIN_WIDTH) / TOTAL_TILE_WIDTH - 1), TOTAL_POSITIONS_WIDE - 3);
+        moveCartridgeTo(xPos);
     }
 }
 
-function handleMousedown(event) {
-    
-}
+/**
+ * Keyboard controls.
+ * @param {KeyboardEvent} event 
+ */
 
-function handleKeyboard(event) {
+function handleKeydown(event) {
     if (event.key == "ArrowLeft") {
         moveCartridgeLeft();
     } else if (event.key == "ArrowRight") {
@@ -23,6 +52,8 @@ function handleKeyboard(event) {
     }
 }
 
-// defined in constants
 WATERFALL_CANVAS.addEventListener('mousedown', handleMousedown);
-window.addEventListener('keydown', handleKeyboard);
+WATERFALL_CANVAS.addEventListener('touchmove', handleTouchmove);
+WATERFALL_CANVAS.addEventListener('touchstart', handleTouchstart);
+WATERFALL_CANVAS.addEventListener('touchend', handleTouchend);
+window.addEventListener('keydown', handleKeydown);
