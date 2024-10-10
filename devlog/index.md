@@ -8,3 +8,4 @@ This series of posts details the development of Factor Falls from the early stag
 3. [Adding Digits](3.md)
 4. [Blocks in the Cartridge](4.md)
 5. [Code Cleanup, Game Refining](5.md)
+6. [Eliminating Rows](6.md)
