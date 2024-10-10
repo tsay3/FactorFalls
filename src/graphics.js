@@ -64,8 +64,10 @@ function drawDigits(digitList) {
 }
 
 function drawCartridgeDigits(offset, digitList) {
+    updateFallingTileAnimation();
     digitList.forEach((digit) => {
         digit.offsetX = offset;
+        digit.offsetY = cartridgeTileFallAnimation[cartridgeTileIndex];
         drawDigit(digit);
     });
 }
@@ -78,9 +80,11 @@ function drawCartridgeDigits(offset, digitList) {
 
 var cartridgeAnimIndex = 0;
 const cartridgeAnimationX = [0, 1, 3, 7, 13, TOTAL_TILE_WIDTH-6];
+var cartridgeTileIndex = 0;
+const cartridgeTileFallAnimation = [0, 5, -1 * TILE_HEIGHT + 4, -1 * TILE_HEIGHT - 1];
 
 function startCartridgeAnimation(){
-    cartridgeAnimIndex = 5;
+    cartridgeAnimIndex = cartridgeAnimationX.length;
 }
 
 function updateCartridgeAnimation() {
@@ -89,7 +93,18 @@ function updateCartridgeAnimation() {
     }
 }
 
+function startCartridgeTileFallAnimation() {
+    cartridgeTileIndex = cartridgeTileFallAnimation.length;
+}
+
+function updateFallingTileAnimation() {
+    if (cartridgeTileIndex > 0) {
+        cartridgeTileIndex--;
+    }
+}
+
 function drawCartridge(position, direction, tileArray) {
+    updateCartridgeAnimation();
     tileArray.forEach((column) => {
         drawCartridgeDigits(-1 * direction * cartridgeAnimationX[cartridgeAnimIndex], column);
     });

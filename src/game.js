@@ -57,6 +57,9 @@ function updateFallingTile(digit) {
             let digitInCartridgePosition = (digit.gameX - cartridgePosition);
             if (10 - (digit.gameY + 1) == cartridgeTiles[digitInCartridgePosition].length) {
                 cartridgeTiles[digitInCartridgePosition].push(digit);
+                if (bottomRowIsComplete()) {
+                    eliminateBottomRow();
+                }
                 digit.offsetY = 0;
                 return false;
             }
@@ -67,6 +70,29 @@ function updateFallingTile(digit) {
         return false;
     }
     return true;
+}
+
+/**
+ * Check if there exists a completed row. Returns true if so.
+ */
+
+function bottomRowIsComplete() {
+    return ((cartridgeTiles[0].length > 0) && (cartridgeTiles[1].length > 0) && (cartridgeTiles[2].length > 0));
+}
+
+function eliminateBottomRow() {
+    let hundreds = cartridgeTiles[0].shift();
+    let tens = cartridgeTiles[1].shift();
+    let ones = cartridgeTiles[2].shift();
+    let number = 100 * hundreds.value + 10 * tens.value + ones.value;
+    offScreenTiles.push(hundreds);
+    offScreenTiles.push(tens);
+    offScreenTiles.push(ones);
+    console.log("Output =", number, "; half of ", number * 2); // for testing out the number
+    startCartridgeTileFallAnimation();
+    cartridgeTiles.forEach((column) => column.forEach((digit) => {
+        digit.gameY++;
+    }));
 }
 
 function update() {
@@ -81,7 +107,6 @@ function update() {
             }
         });
         waterfallTiles = newWaterfallTiles;
-        updateCartridgeAnimation();
 
         drawWaterfallBackdrop();
         drawDigits(waterfallTiles);
