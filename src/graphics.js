@@ -78,10 +78,11 @@ function drawCartridgeDigits(offset, digitList) {
  * 
  */
 
-var cartridgeAnimIndex = 0;
+let cartridgeAnimIndex = 0;
 const cartridgeAnimationX = [0, 1, 3, 7, 13, TOTAL_TILE_WIDTH-6];
-var cartridgeTileIndex = 0;
+let cartridgeTileIndex = 0;
 const cartridgeTileFallAnimation = [0, 5, -1 * TILE_HEIGHT + 4, -1 * TILE_HEIGHT - 1];
+let cartridgeDirection = 0;
 
 function startCartridgeAnimation(){
     cartridgeAnimIndex = cartridgeAnimationX.length;
@@ -103,18 +104,27 @@ function updateFallingTileAnimation() {
     }
 }
 
-function drawCartridge(position, direction, tileArray) {
-    updateCartridgeAnimation();
-    tileArray.forEach((column) => {
-        drawCartridgeDigits(-1 * direction * cartridgeAnimationX[cartridgeAnimIndex], column);
+function updatePushedTiles() {
+    pushedTiles.forEach((tile) => {
+        tile.offsetX = -1 * cartridgeDirection * cartridgeAnimationX[cartridgeAnimIndex];
     });
-    drawCartridgeContainer(position, direction);
 }
 
-function drawCartridgeContainer(position, direction) {
+function drawCartridge(position, tileArray) {
+    updateCartridgeAnimation();
+    tileArray.forEach((column) => {
+        drawCartridgeDigits(-1 * cartridgeDirection * cartridgeAnimationX[cartridgeAnimIndex], column);
+    });
+    if ((tileArray.length > 0)) {
+        updatePushedTiles();
+    }
+    drawCartridgeContainer(position);
+}
+
+function drawCartridgeContainer(position) {
     ctx = WATERFALL_CANVAS.getContext("2d");
     // left = -1, so offset is added... right = 1, so offset is subtracted
-    const baseX = SIDE_MARGIN_WIDTH + (position * TOTAL_TILE_WIDTH) - direction * cartridgeAnimationX[cartridgeAnimIndex];
+    const baseX = SIDE_MARGIN_WIDTH + (position * TOTAL_TILE_WIDTH) - cartridgeDirection * cartridgeAnimationX[cartridgeAnimIndex];
     const baseY = TOP_MARGIN_HEIGHT + (TOTAL_POSITIONS_HIGH - 3) * TILE_HEIGHT;
     ctx.beginPath();
     ctx.moveTo(baseX, baseY + TILE_HEIGHT / 2);
@@ -182,7 +192,7 @@ function drawSatchel() {
 
 if (WATERFALL_CANVAS.getContext) {
     drawWaterfallBackdrop();
-    drawCartridge(4, 0, []);
+    drawCartridge(4, []);
 }
 if (SATCHEL_CANVAS.getContext) {
     drawSatchel();

@@ -1,38 +1,86 @@
 // The game file controls the internal model that the game is built on.
 
 let cartridgePosition = Math.floor(TOTAL_POSITIONS_WIDE / 2 - 1);
-let cartridgeDirection = 0;
 
 let offScreenTiles = [];
 let riverTiles = [];
 let waterfallTiles = [];
+let pushedTiles = [];
+let tileGroups = [];
 let cartridgeTiles = [[], [], []];
 
 function moveCartridgeLeft() {
-    if (cartridgePosition > 0) {
-        cartridgeDirection = -1;
-        cartridgePosition--;
-        updateCartridgeTiles(-1);
-        startCartridgeAnimation();
-    }
+    moveCartridgeTo(cartridgePosition - 1);
 }
 
 function moveCartridgeRight() {
-    if (cartridgePosition < (TOTAL_POSITIONS_WIDE - 3)) {
-        cartridgeDirection = 1;
-        cartridgePosition++;
-        updateCartridgeTiles(1);
-        startCartridgeAnimation();
-    }
+    moveCartridgeTo(cartridgePosition + 1);
+}
+
+function cartridgeColumnPushesTile(column, tile) {
+    return (tile.gameY + 1 >= TOTAL_POSITIONS_HIGH - cartridgeTiles[column].length);
 }
 
 function moveCartridgeTo(xPos) {
-    if (xPos >= 0 && xPos <= (TOTAL_POSITIONS_WIDE - 2)) {
+    const LEFT = 0;
+    const MIDDLE = 1;
+    const RIGHT = 2;
+    pushedTiles.forEach((tile) => {
+        tile.offsetX = 0;
+    })
+    pushedTiles = [];
+    if (xPos >= 0 && xPos <= (TOTAL_POSITIONS_WIDE - 3)) {
+        tileGroups.forEach((group) => {
+            //TODO: complete this
+        });
+        waterfallTiles.forEach((tile) => {
+            if ((tile.gameY < TOTAL_POSITIONS_HIGH) && (xPos < cartridgePosition)) {
+                if (cartridgeColumnPushesTile(LEFT, tile)) {
+                    if (xPos == 0) {
+                        xPos = 1; tile.gameX = 0;
+                        addTileToPushedTiles(tile);
+                    } else {
+                        tile.gameX = xPos - 1;
+                        addTileToPushedTiles(tile);
+                    }
+                } else if (cartridgeColumnPushesTile(MIDDLE, tile)) {
+                    tile.gameX = xPos;
+                    addTileToPushedTiles(tile);
+                } else if (cartridgeColumnPushesTile(RIGHT, tile)) {
+                    tile.gameX = xPos + 1;
+                    addTileToPushedTiles(tile);
+                }
+            } else if ((tile.gameY < TOTAL_POSITIONS_HIGH) && (cartridgePosition < xPos)) {
+                if (cartridgeColumnPushesTile(RIGHT, tile)) {
+                    if (xPos == TOTAL_POSITIONS_WIDE - 3) {
+                        xPos = TOTAL_POSITIONS_WIDE - 4;
+                        tile.gameX = TOTAL_POSITIONS_WIDE - 3;
+                        addTileToPushedTiles(tile);
+                    } else {
+                        tile.gameX = xPos + 3;
+                        addTileToPushedTiles(tile);
+                    }
+                } else if (cartridgeColumnPushesTile(MIDDLE, tile)) {
+                    tile.gameX = xPos + 2;
+                    addTileToPushedTiles(tile);
+                } else if (cartridgeColumnPushesTile(LEFT, tile)) {
+                    tile.gameX = xPos + 1;
+                    addTileToPushedTiles(tile);
+                }
+            }
+        });
+        // Update the cartridge position
         console.log("moved to", xPos);
         cartridgeDirection = xPos - cartridgePosition;
         cartridgePosition = xPos;
         updateCartridgeTiles(cartridgeDirection);
         startCartridgeAnimation();
+    }
+}
+
+function addTileToPushedTiles(tile) {
+    if (pushedTiles.indexOf(tile) == -1) {
+        pushedTiles.push(tile);
     }
 }
 
@@ -110,7 +158,7 @@ function update() {
 
         drawWaterfallBackdrop();
         drawDigits(waterfallTiles);
-        drawCartridge(cartridgePosition, cartridgeDirection, cartridgeTiles);
+        drawCartridge(cartridgePosition, cartridgeTiles);
         updateTime = document.timeline.currentTime;
     }
     
@@ -139,7 +187,7 @@ function addDigit() {
  * Initialize tiles
  */
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 15; i++) {
     offScreenTiles.push(new Digit(0));
 }
 
