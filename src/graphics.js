@@ -182,6 +182,46 @@ function drawSatchel() {
     ctx = SATCHEL_CANVAS.getContext("2d");
     ctx.fillStyle = "#C49A70";
     ctx.fillRect(0, 0, 250, 710);
+    // ctx.fillStyle = "#967656";
+    // ctx.fillRect(10, 90, 230, 50);
+    // ctx.fillRect(10, 160, 230, 170);
+    // ctx.fillRect(10, 340, 230, 320);
+}
+
+/**
+ * Debug drawing
+ */
+
+function drawDebug() {
+    ctx = EFFECTS_CANVAS.getContext("2d");
+    ctx.clearRect(0, 0, EFFECTS_CANVAS.width, EFFECTS_CANVAS.height);
+    // background
+    ctx.fillStyle="#5553";
+    ctx.fillRect(10, 10, 690, 670);
+    // game edges
+    ctx.fillStyle="#2223";
+    ctx.fillRect(SIDE_MARGIN_WIDTH, TOP_MARGIN_HEIGHT, 5, SCREEN_HEIGHT);
+    ctx.fillRect(SIDE_MARGIN_WIDTH + TOTAL_TILE_WIDTH * TOTAL_POSITIONS_WIDE,
+        TOP_MARGIN_HEIGHT, 5, SCREEN_HEIGHT);
+    // 
+    ctx.fillStyle="#F003";
+    waterfallTiles.forEach((tile) => {
+        ctx.fillRect(tile.gameX * TOTAL_TILE_WIDTH + SIDE_MARGIN_WIDTH,
+            tile.gameY * TILE_HEIGHT + TOP_MARGIN_HEIGHT,
+            TOTAL_TILE_WIDTH, TILE_HEIGHT);
+    });
+    //
+    ctx.fillStyle="#0F03";
+    cartridgeTiles.forEach((column) => column.forEach((tile) => {
+        ctx.fillRect(tile.gameX * TOTAL_TILE_WIDTH + SIDE_MARGIN_WIDTH,
+            tile.gameY * TILE_HEIGHT + TOP_MARGIN_HEIGHT,
+            TOTAL_TILE_WIDTH, TILE_HEIGHT);
+    }));
+    // cartridge
+    ctx.fillStyle="#6603";
+    ctx.fillRect(cartridgePosition * TOTAL_TILE_WIDTH + SIDE_MARGIN_WIDTH,
+        (TOTAL_POSITIONS_HIGH - 2) * TILE_HEIGHT + TOP_MARGIN_HEIGHT,
+        3 * TOTAL_TILE_WIDTH, 10);
 }
 
 /**

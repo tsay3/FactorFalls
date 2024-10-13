@@ -1,0 +1,25 @@
+.gameContainer {
+    position:relative;
+}
+
+.alignedCanvas {
+    display: absolute;
+    top: 0;
+    left: 0;
+}
+
+#waterfallCanvas {
+    width: 450;
+    height: 680;
+}
+
+#satchelCanvas {
+    width: 250;
+    height: 680;
+    display: relative;
+}
+
+#effectsCanvas {
+    width: 700;
+    height: 680;
+}

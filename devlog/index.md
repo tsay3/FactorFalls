@@ -9,3 +9,5 @@ This series of posts details the development of Factor Falls from the early stag
 4. [Blocks in the Cartridge](4.md)
 5. [Code Cleanup, Game Refining](5.md)
 6. [Eliminating Rows](6.md)
+7. [Pushing Blocks, Part 1](7.md)
+8. [Adding an Effects Layer](8.md)

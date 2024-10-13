@@ -1,5 +1,13 @@
 const WATERFALL_CANVAS = document.getElementById("waterfallCanvas");
 const SATCHEL_CANVAS = document.getElementById("satchelCanvas");
+const EFFECTS_CANVAS = document.getElementById("effectsCanvas");
+
+WATERFALL_CANVAS.setAttribute('width', 450);
+WATERFALL_CANVAS.setAttribute('height', 680);
+SATCHEL_CANVAS.setAttribute('width', 250);
+SATCHEL_CANVAS.setAttribute('height', 680);
+EFFECTS_CANVAS.setAttribute('width', 700);
+EFFECTS_CANVAS.setAttribute('height', 680);
 
 let SCREEN_WIDTH = WATERFALL_CANVAS.clientWidth;
 let SCREEN_HEIGHT = WATERFALL_CANVAS.clientHeight;
@@ -19,3 +27,6 @@ let TOP_MARGIN_HEIGHT = SCREEN_HEIGHT - TILE_HEIGHT * (TOTAL_POSITIONS_HIGH - 1)
 
 const TILE_FALL_SPEED = 100; // px per second
 const DIGIT_SPAWN_RATE = 1650; // this many milliseconds
+
+console.log("WIDTH:", SCREEN_WIDTH);
+console.log("HEIGHT:", SCREEN_HEIGHT);

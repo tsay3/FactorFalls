@@ -11,14 +11,6 @@ function handleMousedown(event) {
     moveCartridgeTo(xPos);
 }
 
-// function oldHandleMousedown(event) {
-//     if (event.pageX < (SCREEN_WIDTH * 3 / 7)) {
-//         moveCartridgeLeft();
-//     } else if (event.pageX > (SCREEN_WIDTH * 4 / 7)) {
-//         moveCartridgeRight();
-//     }
-// }
-
 /**
  * Touch controls.
  */

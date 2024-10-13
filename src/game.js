@@ -159,6 +159,7 @@ function update() {
         drawWaterfallBackdrop();
         drawDigits(waterfallTiles);
         drawCartridge(cartridgePosition, cartridgeTiles);
+        drawDebug();
         updateTime = document.timeline.currentTime;
     }
     
