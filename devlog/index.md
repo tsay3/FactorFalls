@@ -11,3 +11,4 @@ This series of posts details the development of Factor Falls from the early stag
 6. [Eliminating Rows](6.md)
 7. [Pushing Blocks, Part 1](7.md)
 8. [Adding an Effects Layer](8.md)
+9. [Pushing Blocks, Part 2 + Building a Test Suite](9.md)

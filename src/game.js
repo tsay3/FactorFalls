@@ -17,8 +17,11 @@ function moveCartridgeRight() {
     moveCartridgeTo(cartridgePosition + 1);
 }
 
-function cartridgeColumnPushesTile(column, tile) {
-    return (tile.gameY + 1 >= TOTAL_POSITIONS_HIGH - cartridgeTiles[column].length);
+function cartridgeColumnPushesTile(columnIndex, tile, leftPosition, rightPosition) {
+    if ((tile.gameX >= leftPosition) && (tile.gameX <= rightPosition)) {
+        return (tile.gameY + 3 >= TOTAL_POSITIONS_HIGH - cartridgeTiles[columnIndex].length);
+    }
+    return false;
 }
 
 function moveCartridgeTo(xPos) {
@@ -35,7 +38,8 @@ function moveCartridgeTo(xPos) {
         });
         waterfallTiles.forEach((tile) => {
             if ((tile.gameY < TOTAL_POSITIONS_HIGH) && (xPos < cartridgePosition)) {
-                if (cartridgeColumnPushesTile(LEFT, tile)) {
+                console.log("Moving left");
+                if (cartridgeColumnPushesTile(LEFT, tile, xPos + LEFT, cartridgePosition + LEFT)) {
                     if (xPos == 0) {
                         xPos = 1; tile.gameX = 0;
                         addTileToPushedTiles(tile);
@@ -43,15 +47,16 @@ function moveCartridgeTo(xPos) {
                         tile.gameX = xPos - 1;
                         addTileToPushedTiles(tile);
                     }
-                } else if (cartridgeColumnPushesTile(MIDDLE, tile)) {
+                } else if (cartridgeColumnPushesTile(MIDDLE, tile, xPos + MIDDLE, cartridgePosition + MIDDLE)) {
                     tile.gameX = xPos;
                     addTileToPushedTiles(tile);
-                } else if (cartridgeColumnPushesTile(RIGHT, tile)) {
+                } else if (cartridgeColumnPushesTile(RIGHT, tile, xPos + RIGHT, cartridgePosition + RIGHT)) {
                     tile.gameX = xPos + 1;
                     addTileToPushedTiles(tile);
                 }
             } else if ((tile.gameY < TOTAL_POSITIONS_HIGH) && (cartridgePosition < xPos)) {
-                if (cartridgeColumnPushesTile(RIGHT, tile)) {
+                console.log("Moving right");
+                if (cartridgeColumnPushesTile(RIGHT, tile, cartridgePosition + RIGHT, xPos + RIGHT)) {
                     if (xPos == TOTAL_POSITIONS_WIDE - 3) {
                         xPos = TOTAL_POSITIONS_WIDE - 4;
                         tile.gameX = TOTAL_POSITIONS_WIDE - 3;
@@ -60,10 +65,10 @@ function moveCartridgeTo(xPos) {
                         tile.gameX = xPos + 3;
                         addTileToPushedTiles(tile);
                     }
-                } else if (cartridgeColumnPushesTile(MIDDLE, tile)) {
+                } else if (cartridgeColumnPushesTile(MIDDLE, tile, cartridgePosition + MIDDLE, xPos + MIDDLE)) {
                     tile.gameX = xPos + 2;
                     addTileToPushedTiles(tile);
-                } else if (cartridgeColumnPushesTile(LEFT, tile)) {
+                } else if (cartridgeColumnPushesTile(LEFT, tile, cartridgePosition + LEFT, xPos + LEFT)) {
                     tile.gameX = xPos + 1;
                     addTileToPushedTiles(tile);
                 }
@@ -144,6 +149,7 @@ function eliminateBottomRow() {
 }
 
 function update() {
+    console.log("Updated");
     if ((document.timeline.currentTime - updateTime) / 30 > 1) {
         let newWaterfallTiles = [];
         waterfallTiles.forEach((digit) => {
@@ -195,4 +201,4 @@ for (let i = 0; i < 15; i++) {
 let updateTime = document.timeline.currentTime;
 let digitAddTime = document.timeline.currentTime;
 
-requestAnimationFrame(update);
+let initialUpdate = requestAnimationFrame(update);
