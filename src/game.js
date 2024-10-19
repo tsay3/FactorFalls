@@ -17,9 +17,15 @@ function moveCartridgeRight() {
     moveCartridgeTo(cartridgePosition + 1);
 }
 
-function cartridgeColumnPushesTile(columnIndex, tile, leftPosition, rightPosition) {
+function cartridgeColumnPushesTile(columnIndex, tile, movement) {
+// function cartridgeColumnPushesTile(columnIndex, tile, leftPosition, rightPosition) {
+    if (tile.gameY >= TOTAL_POSITIONS_HIGH) return false;
+    if (cartridgeTiles[columnIndex].length == 0) return false;
+    let offsetPosition = cartridgePosition + columnIndex + movement;
+    let leftPosition = Math.min(offsetPosition, cartridgePosition + columnIndex);
+    let rightPosition = Math.max(offsetPosition, cartridgePosition + columnIndex);
     if ((tile.gameX >= leftPosition) && (tile.gameX <= rightPosition)) {
-        return (tile.gameY + 3 >= TOTAL_POSITIONS_HIGH - cartridgeTiles[columnIndex].length);
+        return (tile.gameY + 1 >= TOTAL_POSITIONS_HIGH - cartridgeTiles[columnIndex].length);
     }
     return false;
 }
@@ -28,47 +34,53 @@ function moveCartridgeTo(xPos) {
     const LEFT = 0;
     const MIDDLE = 1;
     const RIGHT = 2;
+    let movement = xPos - cartridgePosition;
     pushedTiles.forEach((tile) => {
         tile.offsetX = 0;
-    })
+    });
     pushedTiles = [];
     if (xPos >= 0 && xPos <= (TOTAL_POSITIONS_WIDE - 3)) {
         tileGroups.forEach((group) => {
             //TODO: complete this
         });
         waterfallTiles.forEach((tile) => {
-            if ((tile.gameY < TOTAL_POSITIONS_HIGH) && (xPos < cartridgePosition)) {
+            if ((xPos < cartridgePosition)) {
                 console.log("Moving left");
-                if (cartridgeColumnPushesTile(LEFT, tile, xPos + LEFT, cartridgePosition + LEFT)) {
+                if (cartridgeColumnPushesTile(LEFT, tile, movement)) {
                     if (xPos == 0) {
-                        xPos = 1; tile.gameX = 0;
-                        addTileToPushedTiles(tile);
+                        xPos = 1;
+                        if (tile.gameX != 0) {
+                            tile.gameX = 0;
+                            addTileToPushedTiles(tile);
+                        }
                     } else {
                         tile.gameX = xPos - 1;
                         addTileToPushedTiles(tile);
                     }
-                } else if (cartridgeColumnPushesTile(MIDDLE, tile, xPos + MIDDLE, cartridgePosition + MIDDLE)) {
+                } else if (cartridgeColumnPushesTile(MIDDLE, tile, movement)) {
                     tile.gameX = xPos;
                     addTileToPushedTiles(tile);
-                } else if (cartridgeColumnPushesTile(RIGHT, tile, xPos + RIGHT, cartridgePosition + RIGHT)) {
+                } else if (cartridgeColumnPushesTile(RIGHT, tile, movement)) {
                     tile.gameX = xPos + 1;
                     addTileToPushedTiles(tile);
                 }
-            } else if ((tile.gameY < TOTAL_POSITIONS_HIGH) && (cartridgePosition < xPos)) {
+            } else if ((cartridgePosition < xPos)) {
                 console.log("Moving right");
-                if (cartridgeColumnPushesTile(RIGHT, tile, cartridgePosition + RIGHT, xPos + RIGHT)) {
+                if (cartridgeColumnPushesTile(RIGHT, tile, movement)) {
                     if (xPos == TOTAL_POSITIONS_WIDE - 3) {
                         xPos = TOTAL_POSITIONS_WIDE - 4;
-                        tile.gameX = TOTAL_POSITIONS_WIDE - 3;
-                        addTileToPushedTiles(tile);
+                        if (tile.gameX != TOTAL_POSITIONS_WIDE - 1){
+                            tile.gameX = TOTAL_POSITIONS_WIDE - 1;
+                            addTileToPushedTiles(tile);
+                        }
                     } else {
                         tile.gameX = xPos + 3;
                         addTileToPushedTiles(tile);
                     }
-                } else if (cartridgeColumnPushesTile(MIDDLE, tile, cartridgePosition + MIDDLE, xPos + MIDDLE)) {
+                } else if (cartridgeColumnPushesTile(MIDDLE, tile, movement)) {
                     tile.gameX = xPos + 2;
                     addTileToPushedTiles(tile);
-                } else if (cartridgeColumnPushesTile(LEFT, tile, cartridgePosition + LEFT, xPos + LEFT)) {
+                } else if (cartridgeColumnPushesTile(LEFT, tile, movement)) {
                     tile.gameX = xPos + 1;
                     addTileToPushedTiles(tile);
                 }
@@ -108,7 +120,7 @@ function updateFallingTile(digit) {
         if (digit.gameX >= cartridgePosition && digit.gameX <= cartridgePosition + 2) {
             // Digit is within the cartridge
             let digitInCartridgePosition = (digit.gameX - cartridgePosition);
-            if (10 - (digit.gameY + 1) == cartridgeTiles[digitInCartridgePosition].length) {
+            if (TOTAL_POSITIONS_HIGH - (digit.gameY + 1) == cartridgeTiles[digitInCartridgePosition].length) {
                 cartridgeTiles[digitInCartridgePosition].push(digit);
                 if (bottomRowIsComplete()) {
                     eliminateBottomRow();
@@ -118,6 +130,7 @@ function updateFallingTile(digit) {
             }
         }
         digit.offsetY -= TILE_HEIGHT;
+        digit.value = digit.gameY;
     }
     if (digit.gameY > TOTAL_POSITIONS_HIGH + 1) {
         return false;

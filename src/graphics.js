@@ -125,7 +125,7 @@ function drawCartridgeContainer(position) {
     ctx = WATERFALL_CANVAS.getContext("2d");
     // left = -1, so offset is added... right = 1, so offset is subtracted
     const baseX = SIDE_MARGIN_WIDTH + (position * TOTAL_TILE_WIDTH) - cartridgeDirection * cartridgeAnimationX[cartridgeAnimIndex];
-    const baseY = TOP_MARGIN_HEIGHT + (TOTAL_POSITIONS_HIGH - 3) * TILE_HEIGHT;
+    const baseY = TOP_MARGIN_HEIGHT + (TOTAL_POSITIONS_HIGH - 1) * TILE_HEIGHT;
     ctx.beginPath();
     ctx.moveTo(baseX, baseY + TILE_HEIGHT / 2);
     ctx.lineTo(baseX, baseY + TILE_HEIGHT);
