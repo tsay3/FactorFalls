@@ -13,4 +13,4 @@ This series of posts details the development of Factor Falls from the early stag
 8. [Adding an Effects Layer](8.md)
 9. [Pushing Blocks, Part 2 + Building a Test Suite](9.md)
 10. [Day 10: Testing Suite, Part 2](10.md)
-11. [Day 11: Day 11: Factoring, and Simplifying the Canvas](11.md)
+11. [Day 11: Day 11: Factoring, Number Drawing, and Simplifying the Canvas](11.md)
