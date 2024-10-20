@@ -1,7 +1,5 @@
 // The graphics file handles the drawing of the game model onto the canvas of the webpage.
 
-let fontSize = "bold " + TOTAL_TILE_WIDTH + "px sans-serif"
-
 /**
  * Waterfall display & animation
  */
@@ -13,7 +11,8 @@ function drawWaterfallBackdrop() {
 }
 
 function drawSky() {
-    ctx = WATERFALL_CANVAS.getContext("2d");
+    // ctx = WATERFALL_CANVAS.getContext("2d");
+    ctx = CANVAS.getContext("2d");
     ctx.fillStyle = "#D6FBFF";
     ctx.fillRect(0, 0,
         SIDE_MARGIN_WIDTH * 2 + TOTAL_POSITIONS_WIDE * TOTAL_TILE_WIDTH,
@@ -21,7 +20,8 @@ function drawSky() {
 }
 
 function drawWater() {
-    ctx = WATERFALL_CANVAS.getContext("2d");
+    // ctx = WATERFALL_CANVAS.getContext("2d");
+    ctx = CANVAS.getContext("2d");
     ctx.fillStyle = "#3A86FF";
     ctx.fillRect(0, TOP_MARGIN_HEIGHT + TILE_HEIGHT,
         SIDE_MARGIN_WIDTH * 2 + TOTAL_POSITIONS_WIDE * TOTAL_TILE_WIDTH,
@@ -29,7 +29,8 @@ function drawWater() {
 }
 
 function drawRiverbanks() {
-    ctx = WATERFALL_CANVAS.getContext("2d");
+    // ctx = WATERFALL_CANVAS.getContext("2d");
+    ctx = CANVAS.getContext("2d");
     ctx.fillStyle = "#69BF4A";
     ctx.fillRect(0, TOP_MARGIN_HEIGHT - 20 + TILE_HEIGHT,
         SIDE_MARGIN_WIDTH - 5,
@@ -46,15 +47,16 @@ function drawRiverbanks() {
  */
 
 function drawDigit(digit) {
-    ctx = WATERFALL_CANVAS.getContext("2d");
+    // ctx = WATERFALL_CANVAS.getContext("2d");
+    ctx = CANVAS.getContext("2d");
     ctx.fillStyle = digit.borderColor;
     ctx.fillRect(digit.x, digit.y, digit.width, digit.height);
     ctx.fillStyle = digit.innerColor;
     ctx.fillRect(digit.x + digit.borderWidth, digit.y + digit.borderWidth, digit.width - 2 * digit.borderWidth, digit.height - 2 * digit.borderWidth);
     ctx.fillStyle = digit.numberColor;
-    ctx.textBaseline = "top";
-    ctx.font = fontSize;
-    ctx.fillText(digit.value, digit.x + digit.borderWidth + 1, digit.y + digit.borderWidth + 1);
+    ctx.textBaseline = "middle";
+    ctx.font = digit.fontSize;
+    ctx.fillText(digit.value, digit.x + digit.borderWidth + 1, digit.y + digit.height / 2);
 }
 
 function drawDigits(digitList) {
@@ -122,7 +124,8 @@ function drawCartridge(position, tileArray) {
 }
 
 function drawCartridgeContainer(position) {
-    ctx = WATERFALL_CANVAS.getContext("2d");
+    // ctx = WATERFALL_CANVAS.getContext("2d");
+    ctx = CANVAS.getContext("2d");
     // left = -1, so offset is added... right = 1, so offset is subtracted
     const baseX = SIDE_MARGIN_WIDTH + (position * TOTAL_TILE_WIDTH) - cartridgeDirection * cartridgeAnimationX[cartridgeAnimIndex];
     const baseY = TOP_MARGIN_HEIGHT + (TOTAL_POSITIONS_HIGH - 1) * TILE_HEIGHT;
@@ -179,49 +182,70 @@ function drawCartridgeContainer(position) {
  */
 
 function drawSatchel() {
-    ctx = SATCHEL_CANVAS.getContext("2d");
+    // ctx = SATCHEL_CANVAS.getContext("2d");
+    ctx = CANVAS.getContext("2d");
     ctx.fillStyle = "#C49A70";
-    ctx.fillRect(0, 0, 250, 710);
-    // ctx.fillStyle = "#967656";
-    // ctx.fillRect(10, 90, 230, 50);
-    // ctx.fillRect(10, 160, 230, 170);
-    // ctx.fillRect(10, 340, 230, 320);
+    ctx.fillRect(GAME_WIDTH, 0, 250, 710);
+    ctx.fillStyle = "#967656";
+    ctx.fillRect(GAME_WIDTH + 10, 10, 230, 50);
+    ctx.fillRect(GAME_WIDTH + 10, 80, 230, 170);
+    ctx.fillRect(GAME_WIDTH + 10, 340, 230, 180);
+    drawCommonPrimes();
 }
 
-/**
- * Debug drawing
- */
+function updateSatchel() {
+    drawCommonPrimeScores();
+    drawUncommonPrimes();
+    drawNumber();
+}
 
-function drawDebug() {
-    ctx = EFFECTS_CANVAS.getContext("2d");
-    ctx.clearRect(0, 0, EFFECTS_CANVAS.width, EFFECTS_CANVAS.height);
-    // background
-    ctx.fillStyle="#5553";
-    ctx.fillRect(10, 10, 690, 670);
-    // game edges
-    ctx.fillStyle="#2223";
-    ctx.fillRect(SIDE_MARGIN_WIDTH, TOP_MARGIN_HEIGHT, 5, SCREEN_HEIGHT);
-    ctx.fillRect(SIDE_MARGIN_WIDTH + TOTAL_TILE_WIDTH * TOTAL_POSITIONS_WIDE,
-        TOP_MARGIN_HEIGHT, 5, SCREEN_HEIGHT);
-    // 
-    ctx.fillStyle="#F003";
-    waterfallTiles.forEach((tile) => {
-        ctx.fillRect(tile.gameX * TOTAL_TILE_WIDTH + SIDE_MARGIN_WIDTH,
-            tile.gameY * TILE_HEIGHT + TOP_MARGIN_HEIGHT,
-            TOTAL_TILE_WIDTH, TILE_HEIGHT);
-    });
-    //
-    ctx.fillStyle="#0F03";
-    cartridgeTiles.forEach((column) => column.forEach((tile) => {
-        ctx.fillRect(tile.gameX * TOTAL_TILE_WIDTH + SIDE_MARGIN_WIDTH,
-            tile.gameY * TILE_HEIGHT + TOP_MARGIN_HEIGHT,
-            TOTAL_TILE_WIDTH, TILE_HEIGHT);
-    }));
-    // cartridge
-    ctx.fillStyle="#6603";
-    ctx.fillRect(cartridgePosition * TOTAL_TILE_WIDTH + SIDE_MARGIN_WIDTH,
-        (TOTAL_POSITIONS_HIGH - 2) * TILE_HEIGHT + TOP_MARGIN_HEIGHT,
-        3 * TOTAL_TILE_WIDTH, 10);
+const commonPrimes = [new Box(2), new Box(3), new Box(5), new Box(7)];
+commonPrimes[0].x = GAME_WIDTH + 20;
+commonPrimes[1].x = GAME_WIDTH + 120;
+commonPrimes[2].x = GAME_WIDTH + 20;
+commonPrimes[3].x = GAME_WIDTH + 120;
+commonPrimes[0].y = 100;
+commonPrimes[1].y = 100;
+commonPrimes[2].y = 190;
+commonPrimes[3].y = 190;
+commonPrimes.forEach(digit => {
+    digit.width = 30;
+    digit.height = 40;
+    digit.fontSize = "bold 20px sans-serif"
+});
+
+function drawCommonPrimes() {
+    ctx = CANVAS.getContext("2d");
+    commonPrimes.forEach(digit => drawDigit(digit));
+}
+
+function drawCommonPrimeScores() {
+
+}
+
+function drawUncommonPrimes() {
+
+}
+
+let numberBox = new Box(100);
+numberBox.x = GAME_WIDTH + 70;
+numberBox.y = 260;
+
+function drawNumber() {
+    ctx = CANVAS.getContext("2d");
+    ctx.fillStyle = "#C49A70";
+    ctx.fillRect(numberBox.x, numberBox.y, 4 * TILE_WIDTH, numberBox.height);
+    if (number != -1) {
+        numberBox.value = number;
+        if (number > 100) {
+            numberBox.width = 3 * TILE_WIDTH - 4 * numberBox.borderWidth;
+        } else if (number > 10) {
+            numberBox.width = 2 * TILE_WIDTH - 2 * numberBox.borderWidth;
+        } else {
+            numberBox.width = TILE_WIDTH;
+        }
+        drawDigit(numberBox);
+    }
 }
 
 /**
@@ -230,10 +254,15 @@ function drawDebug() {
  * 
  */
 
-if (WATERFALL_CANVAS.getContext) {
+// if (WATERFALL_CANVAS.getContext) {
+//     drawWaterfallBackdrop();
+//     drawCartridge(4, []);
+// }
+// if (SATCHEL_CANVAS.getContext) {
+//     drawSatchel();
+// }
+if (CANVAS.getContext) {
     drawWaterfallBackdrop();
     drawCartridge(4, []);
-}
-if (SATCHEL_CANVAS.getContext) {
     drawSatchel();
 }

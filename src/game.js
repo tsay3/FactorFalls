@@ -18,7 +18,6 @@ function moveCartridgeRight() {
 }
 
 function cartridgeColumnPushesTile(columnIndex, tile, movement) {
-// function cartridgeColumnPushesTile(columnIndex, tile, leftPosition, rightPosition) {
     if (tile.gameY >= TOTAL_POSITIONS_HIGH) return false;
     if (cartridgeTiles[columnIndex].length == 0) return false;
     let offsetPosition = cartridgePosition + columnIndex + movement;
@@ -130,7 +129,6 @@ function updateFallingTile(digit) {
             }
         }
         digit.offsetY -= TILE_HEIGHT;
-        digit.value = digit.gameY;
     }
     if (digit.gameY > TOTAL_POSITIONS_HIGH + 1) {
         return false;
@@ -146,11 +144,13 @@ function bottomRowIsComplete() {
     return ((cartridgeTiles[0].length > 0) && (cartridgeTiles[1].length > 0) && (cartridgeTiles[2].length > 0));
 }
 
+let number = -1;
+
 function eliminateBottomRow() {
     let hundreds = cartridgeTiles[0].shift();
     let tens = cartridgeTiles[1].shift();
     let ones = cartridgeTiles[2].shift();
-    let number = 100 * hundreds.value + 10 * tens.value + ones.value;
+    number = 100 * hundreds.value + 10 * tens.value + ones.value;
     offScreenTiles.push(hundreds);
     offScreenTiles.push(tens);
     offScreenTiles.push(ones);
@@ -159,6 +159,7 @@ function eliminateBottomRow() {
     cartridgeTiles.forEach((column) => column.forEach((digit) => {
         digit.gameY++;
     }));
+    updateSatchel();
 }
 
 function update() {
@@ -178,7 +179,7 @@ function update() {
         drawWaterfallBackdrop();
         drawDigits(waterfallTiles);
         drawCartridge(cartridgePosition, cartridgeTiles);
-        drawDebug();
+        if (debugMode) drawDebug();
         updateTime = document.timeline.currentTime;
     }
     
@@ -192,14 +193,24 @@ function update() {
 }
 
 let digitNum = 0;
+let fullGame = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+function setDigitValue() {
+    let tutorial1 = [4];
+    let tutorial2 = [4, 0, 5];
+    let tutorial3 = [4, 0, 5, 2];
+    let tutorial4 = [4, 0, 5, 2, 6, 1];
+    let tutorial5 = [4, 0, 5, 2, 6, 8, 1, 3];
+
+    return tutorial3[Math.floor(Math.random() * tutorial3.length)];
+}
 
 function addDigit() {
     let digit = offScreenTiles.pop();
     digit.gameX = Math.floor((Math.random() * TOTAL_POSITIONS_WIDE + Math.random() * TOTAL_POSITIONS_WIDE)/2);
     digit.gameY = 0;
-    digit.value = digitNum;
+    digit.value = setDigitValue();
     digitNum++;
-    if (digitNum >= 10) digitNum = 0;
     waterfallTiles.push(digit);
 }
 

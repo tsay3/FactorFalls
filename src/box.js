@@ -9,6 +9,7 @@ class Box {
         this.height = TILE_HEIGHT;
         this.borderWidth = 5;
         this.numberColor = "#7D969F";
+        this.fontSize = "bold " + TOTAL_TILE_WIDTH + "px sans-serif"
     }
 
     get x() {

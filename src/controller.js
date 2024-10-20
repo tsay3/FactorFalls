@@ -41,11 +41,17 @@ function handleKeydown(event) {
         moveCartridgeLeft();
     } else if (event.key == "ArrowRight") {
         moveCartridgeRight();
+    } else if (event.key == "`") {
+        debugMode = !debugMode;
     }
 }
 
-WATERFALL_CANVAS.addEventListener('mousedown', handleMousedown);
-WATERFALL_CANVAS.addEventListener('touchmove', handleTouchmove);
-WATERFALL_CANVAS.addEventListener('touchstart', handleTouchstart);
-WATERFALL_CANVAS.addEventListener('touchend', handleTouchend);
+// WATERFALL_CANVAS.addEventListener('mousedown', handleMousedown);
+// WATERFALL_CANVAS.addEventListener('touchmove', handleTouchmove);
+// WATERFALL_CANVAS.addEventListener('touchstart', handleTouchstart);
+// WATERFALL_CANVAS.addEventListener('touchend', handleTouchend);
+CANVAS.addEventListener('mousedown', handleMousedown);
+CANVAS.addEventListener('touchmove', handleTouchmove);
+CANVAS.addEventListener('touchstart', handleTouchstart);
+CANVAS.addEventListener('touchend', handleTouchend);
 window.addEventListener('keydown', handleKeydown);
