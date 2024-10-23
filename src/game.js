@@ -44,7 +44,6 @@ function moveCartridgeTo(xPos) {
         });
         waterfallTiles.forEach((tile) => {
             if ((xPos < cartridgePosition)) {
-                console.log("Moving left");
                 if (cartridgeColumnPushesTile(LEFT, tile, movement)) {
                     if (xPos == 0) {
                         xPos = 1;
@@ -64,7 +63,6 @@ function moveCartridgeTo(xPos) {
                     addTileToPushedTiles(tile);
                 }
             } else if ((cartridgePosition < xPos)) {
-                console.log("Moving right");
                 if (cartridgeColumnPushesTile(RIGHT, tile, movement)) {
                     if (xPos == TOTAL_POSITIONS_WIDE - 3) {
                         xPos = TOTAL_POSITIONS_WIDE - 4;
@@ -144,26 +142,24 @@ function bottomRowIsComplete() {
     return ((cartridgeTiles[0].length > 0) && (cartridgeTiles[1].length > 0) && (cartridgeTiles[2].length > 0));
 }
 
-let number = -1;
+let lastNumberBuilt = -1;
 
 function eliminateBottomRow() {
     let hundreds = cartridgeTiles[0].shift();
     let tens = cartridgeTiles[1].shift();
     let ones = cartridgeTiles[2].shift();
-    number = 100 * hundreds.value + 10 * tens.value + ones.value;
+    lastNumberBuilt = 100 * hundreds.value + 10 * tens.value + ones.value;
     offScreenTiles.push(hundreds);
     offScreenTiles.push(tens);
     offScreenTiles.push(ones);
-    console.log("Output =", number, "; half of ", number * 2); // for testing out the number
     startCartridgeTileFallAnimation();
     cartridgeTiles.forEach((column) => column.forEach((digit) => {
         digit.gameY++;
     }));
-    updateSatchel();
+    addNumberToSatchel(lastNumberBuilt);
 }
 
 function update() {
-    console.log("Updated");
     if ((document.timeline.currentTime - updateTime) / 30 > 1) {
         let newWaterfallTiles = [];
         waterfallTiles.forEach((digit) => {

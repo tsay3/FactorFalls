@@ -1,6 +1,6 @@
 class Box {
     constructor(value) {
-        this.value = value;
+        this._value = value;
         this._x = 9999;
         this._y = 9999;
         this.borderColor = "#CA8363";
@@ -10,6 +10,17 @@ class Box {
         this.borderWidth = 5;
         this.numberColor = "#7D969F";
         this.fontSize = "bold " + TOTAL_TILE_WIDTH + "px sans-serif"
+    }
+
+    get value() {
+        return this._value;
+    }
+
+    /**
+     * @param {number} newValue
+     */
+    set value(newValue) {
+        this._value = newValue;
     }
 
     get x() {
@@ -34,6 +45,42 @@ class Box {
 
     set y(newY) {
         this._y = newY;
+    }
+}
+
+class Factor extends Box {
+    constructor(value) {
+        super(value);
+        this.innerColor = "#CCC";
+        this.borderColor = "#977";
+        let fontValue = TILE_WIDTH * 2 / 3;
+        this.height = TILE_HEIGHT * 2 / 3;
+        this.width = fontValue;
+        if (value >= 100) {
+            this.width = 3 * fontValue - 4 * this.borderWidth;
+        } else if (value >= 10) {
+            this.width = 2 * fontValue - 2 * this.borderWidth;
+        }
+        this.borderWidth = 4;
+        this.numberColor = "#999";
+        this.fontSize = "bold " + fontValue + "px sans-serif"
+    }
+
+    get value() {
+        return this._value;
+    }
+
+    /**
+     * @param {number} newValue
+     */
+    set value(newValue) {
+        this._value = newValue;
+        this.width = TILE_WIDTH * 2 / 3;
+        if (newValue >= 100) {
+            this.width = 3 * this.width - 4 * this.borderWidth;
+        } else if (newValue >= 10) {
+            this.width = 2 * this.width - 2 * this.borderWidth;
+        }
     }
 }
 

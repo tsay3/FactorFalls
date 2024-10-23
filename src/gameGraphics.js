@@ -199,7 +199,7 @@ function updateSatchel() {
     drawNumber();
 }
 
-const commonPrimes = [new Box(2), new Box(3), new Box(5), new Box(7)];
+const commonPrimes = [new Factor(2), new Factor(3), new Factor(5), new Factor(7)];
 commonPrimes[0].x = GAME_WIDTH + 20;
 commonPrimes[1].x = GAME_WIDTH + 120;
 commonPrimes[2].x = GAME_WIDTH + 20;
@@ -208,11 +208,11 @@ commonPrimes[0].y = 100;
 commonPrimes[1].y = 100;
 commonPrimes[2].y = 190;
 commonPrimes[3].y = 190;
-commonPrimes.forEach(digit => {
-    digit.width = 30;
-    digit.height = 40;
-    digit.fontSize = "bold 20px sans-serif"
-});
+// commonPrimes.forEach(digit => {
+//     digit.width = 30;
+//     digit.height = 40;
+//     digit.fontSize = "bold 20px sans-serif"
+// });
 
 function drawCommonPrimes() {
     ctx = CANVAS.getContext("2d");
@@ -220,7 +220,20 @@ function drawCommonPrimes() {
 }
 
 function drawCommonPrimeScores() {
-
+    ctx = CANVAS.getContext("2d");
+    ctx.fillStyle = "#333";
+    ctx.fillRect(GAME_WIDTH + 60, 100, 30, 40);
+    ctx.fillRect(GAME_WIDTH + 160, 100, 30, 40);
+    ctx.fillRect(GAME_WIDTH + 60, 190, 30, 40);
+    ctx.fillRect(GAME_WIDTH + 160, 190, 30, 40);
+    ctx.fillStyle = "#DDD";
+    ctx.textBaseline = "top";
+    ctx.font = "20px system-ui";
+    console.log("drawing prime scores");
+    ctx.fillText(twosCount.toString(), GAME_WIDTH + 60, 100);
+    ctx.fillText(threesCount.toString(), GAME_WIDTH + 160, 100);
+    ctx.fillText(fivesCount.toString(), GAME_WIDTH + 60, 190);
+    ctx.fillText(sevensCount.toString(), GAME_WIDTH + 160, 190);
 }
 
 function drawUncommonPrimes() {
@@ -233,17 +246,10 @@ numberBox.y = 260;
 
 function drawNumber() {
     ctx = CANVAS.getContext("2d");
-    ctx.fillStyle = "#C49A70";
-    ctx.fillRect(numberBox.x, numberBox.y, 4 * TILE_WIDTH, numberBox.height);
-    if (number != -1) {
-        numberBox.value = number;
-        if (number > 100) {
-            numberBox.width = 3 * TILE_WIDTH - 4 * numberBox.borderWidth;
-        } else if (number > 10) {
-            numberBox.width = 2 * TILE_WIDTH - 2 * numberBox.borderWidth;
-        } else {
-            numberBox.width = TILE_WIDTH;
-        }
+    if (lastNumberBuilt != -1) {
+        ctx.fillStyle = "#C49A70";
+        ctx.fillRect(numberBox.x, numberBox.y, 4 * TILE_WIDTH, numberBox.height);
+        numberBox.value = lastNumberBuilt;
         drawDigit(numberBox);
     }
 }
@@ -265,4 +271,5 @@ if (CANVAS.getContext) {
     drawWaterfallBackdrop();
     drawCartridge(4, []);
     drawSatchel();
+    updateSatchel();
 }
