@@ -1,13 +1,30 @@
-// The game file controls the internal model that the game is built on.
+
 
 let cartridgePosition = Math.floor(TOTAL_POSITIONS_WIDE / 2 - 1);
+let cartridgeTiles = [[], [], []];
 
 let offScreenTiles = [];
 let riverTiles = [];
 let waterfallTiles = [];
 let pushedTiles = [];
 let tileGroups = [];
-let cartridgeTiles = [[], [], []];
+
+/**
+ * Initialize tiles
+ */
+
+for (let i = 0; i < 15; i++) {
+    offScreenTiles.push(new Digit(0));
+}
+
+function addDigit() {
+    let digit = offScreenTiles.pop();
+    digit.gameX = Math.floor((Math.random() * TOTAL_POSITIONS_WIDE + Math.random() * TOTAL_POSITIONS_WIDE)/2);
+    digit.gameY = 0;
+    digit.value = setDigitValue();
+    // digitNum++;
+    waterfallTiles.push(digit);
+}
 
 function moveCartridgeLeft() {
     moveCartridgeTo(cartridgePosition - 1);
@@ -92,11 +109,6 @@ function moveCartridgeTo(xPos) {
     }
 }
 
-function addTileToPushedTiles(tile) {
-    if (pushedTiles.indexOf(tile) == -1) {
-        pushedTiles.push(tile);
-    }
-}
 
 function updateCartridgeTiles(offset) {
     cartridgeTiles.forEach((column) => {
@@ -104,6 +116,12 @@ function updateCartridgeTiles(offset) {
             digit.gameX += offset;
         })
     })
+}
+
+function addTileToPushedTiles(tile) {
+    if (pushedTiles.indexOf(tile) == -1) {
+        pushedTiles.push(tile);
+    }
 }
 
 /**
@@ -142,13 +160,11 @@ function bottomRowIsComplete() {
     return ((cartridgeTiles[0].length > 0) && (cartridgeTiles[1].length > 0) && (cartridgeTiles[2].length > 0));
 }
 
-let lastNumberBuilt = -1;
-
 function eliminateBottomRow() {
     let hundreds = cartridgeTiles[0].shift();
     let tens = cartridgeTiles[1].shift();
     let ones = cartridgeTiles[2].shift();
-    lastNumberBuilt = 100 * hundreds.value + 10 * tens.value + ones.value;
+    let lastNumberBuilt = 100 * hundreds.value + 10 * tens.value + ones.value;
     offScreenTiles.push(hundreds);
     offScreenTiles.push(tens);
     offScreenTiles.push(ones);
@@ -159,66 +175,23 @@ function eliminateBottomRow() {
     addNumberToSatchel(lastNumberBuilt);
 }
 
-function update() {
-    if ((document.timeline.currentTime - updateTime) / 30 > 1) {
-        let newWaterfallTiles = [];
-        waterfallTiles.forEach((digit) => {
-            if (updateFallingTile(digit)) {
-                newWaterfallTiles.push(digit);
-            }
-            if (digit.gameY > TOTAL_POSITIONS_HIGH + 1) {
-                offScreenTiles.push(digit);
-            }
-        });
-        waterfallTiles = newWaterfallTiles;
-
-        drawWaterfallBackdrop();
-        drawDigits(waterfallTiles);
-        drawCartridge(cartridgePosition, cartridgeTiles);
-        if (debugMode) drawDebug();
-        updateTime = document.timeline.currentTime;
-    }
-    
-    if ((document.timeline.currentTime - digitAddTime) / DIGIT_SPAWN_RATE > 1) {
-        if (offScreenTiles.length > 0) {
-            addDigit();
-        }
-        digitAddTime = document.timeline.currentTime;
-    }
-    requestAnimationFrame(update);
-}
-
-let digitNum = 0;
-let fullGame = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-function setDigitValue() {
-    let tutorial1 = [4];
-    let tutorial2 = [4, 0, 5];
-    let tutorial3 = [4, 0, 5, 2];
-    let tutorial4 = [4, 0, 5, 2, 6, 1];
-    let tutorial5 = [4, 0, 5, 2, 6, 8, 1, 3];
-
-    return tutorial3[Math.floor(Math.random() * tutorial3.length)];
-}
-
-function addDigit() {
-    let digit = offScreenTiles.pop();
-    digit.gameX = Math.floor((Math.random() * TOTAL_POSITIONS_WIDE + Math.random() * TOTAL_POSITIONS_WIDE)/2);
-    digit.gameY = 0;
-    digit.value = setDigitValue();
-    digitNum++;
-    waterfallTiles.push(digit);
-}
-
 /**
- * Initialize tiles
+ * Update the waterfall model.
  */
 
-for (let i = 0; i < 15; i++) {
-    offScreenTiles.push(new Digit(0));
+function updateWaterfallModel() {
+    let newWaterfallTiles = [];
+    waterfallTiles.forEach((digit) => {
+        if (updateFallingTile(digit)) {
+            newWaterfallTiles.push(digit);
+        }
+        if (digit.gameY > TOTAL_POSITIONS_HIGH + 1) {
+            offScreenTiles.push(digit);
+        }
+    });
+    waterfallTiles = newWaterfallTiles;
+
+    drawWaterfallBackdrop();
+    drawDigits(waterfallTiles, CANVAS.getContext("2d"));
+    drawCartridge(cartridgePosition, cartridgeTiles);
 }
-
-let updateTime = document.timeline.currentTime;
-let digitAddTime = document.timeline.currentTime;
-
-let initialUpdate = requestAnimationFrame(update);

@@ -2,12 +2,12 @@ const LEFT = 0;
 const MIDDLE = 1;
 const RIGHT = 2;
 
-function drawWaterfallBackdrop() {}
-function drawDigits() {}
-function drawCartridge() {}
-function drawDebug() {}
+// function drawWaterfallBackdrop() {}
+// function drawDigits(digitList, ctx) {}
+// function drawCartridge() {}
+// function drawDebug() {}
 
-cancelAnimationFrame(initialUpdate);
+// cancelAnimationFrame(initialUpdate);
 
 /**
  * This function tests every case of a block being below the cartridge and pushed around.

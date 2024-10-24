@@ -15,7 +15,7 @@ function drawSky() {
     ctx = CANVAS.getContext("2d");
     ctx.fillStyle = "#D6FBFF";
     ctx.fillRect(0, 0,
-        SIDE_MARGIN_WIDTH * 2 + TOTAL_POSITIONS_WIDE * TOTAL_TILE_WIDTH,
+        SIDE_MARGIN_WIDTH * 2 + TOTAL_POSITIONS_WIDE * TILE_PLUS_MARGIN,
         TOP_MARGIN_HEIGHT + TILE_HEIGHT * (TOTAL_POSITIONS_HIGH - 1) + BOTTOM_MARGIN_HEIGHT);
 }
 
@@ -24,7 +24,7 @@ function drawWater() {
     ctx = CANVAS.getContext("2d");
     ctx.fillStyle = "#3A86FF";
     ctx.fillRect(0, TOP_MARGIN_HEIGHT + TILE_HEIGHT,
-        SIDE_MARGIN_WIDTH * 2 + TOTAL_POSITIONS_WIDE * TOTAL_TILE_WIDTH,
+        SIDE_MARGIN_WIDTH * 2 + TOTAL_POSITIONS_WIDE * TILE_PLUS_MARGIN,
         TILE_HEIGHT * (TOTAL_POSITIONS_HIGH - 1) + BOTTOM_MARGIN_HEIGHT);
 }
 
@@ -35,7 +35,7 @@ function drawRiverbanks() {
     ctx.fillRect(0, TOP_MARGIN_HEIGHT - 20 + TILE_HEIGHT,
         SIDE_MARGIN_WIDTH - 5,
         20 + (TILE_HEIGHT - 1) * TOTAL_POSITIONS_HIGH + BOTTOM_MARGIN_HEIGHT);
-    ctx.fillRect(SIDE_MARGIN_WIDTH + 5 + TOTAL_POSITIONS_WIDE * TOTAL_TILE_WIDTH,
+    ctx.fillRect(SIDE_MARGIN_WIDTH + 5 + TOTAL_POSITIONS_WIDE * TILE_PLUS_MARGIN,
         TOP_MARGIN_HEIGHT - 20 + TILE_HEIGHT,
         SIDE_MARGIN_WIDTH - 5,
         20 + (TILE_HEIGHT - 1) * TOTAL_POSITIONS_HIGH + BOTTOM_MARGIN_HEIGHT);
@@ -46,22 +46,22 @@ function drawRiverbanks() {
  * Digits display and animation
  */
 
-function drawDigit(digit) {
-    // ctx = WATERFALL_CANVAS.getContext("2d");
-    ctx = CANVAS.getContext("2d");
-    ctx.fillStyle = digit.borderColor;
-    ctx.fillRect(digit.x, digit.y, digit.width, digit.height);
-    ctx.fillStyle = digit.innerColor;
-    ctx.fillRect(digit.x + digit.borderWidth, digit.y + digit.borderWidth, digit.width - 2 * digit.borderWidth, digit.height - 2 * digit.borderWidth);
-    ctx.fillStyle = digit.numberColor;
-    ctx.textBaseline = "middle";
-    ctx.font = digit.fontSize;
-    ctx.fillText(digit.value, digit.x + digit.borderWidth + 1, digit.y + digit.height / 2);
-}
+// function drawDigit(digit, ctx) {
+//     // ctx = WATERFALL_CANVAS.getContext("2d");
+//     // ctx = CANVAS.getContext("2d");
+//     ctx.fillStyle = digit.borderColor;
+//     ctx.fillRect(digit.x, digit.y, digit.width, digit.height);
+//     ctx.fillStyle = digit.innerColor;
+//     ctx.fillRect(digit.x + digit.borderWidth, digit.y + digit.borderWidth, digit.width - 2 * digit.borderWidth, digit.height - 2 * digit.borderWidth);
+//     ctx.fillStyle = digit.numberColor;
+//     ctx.textBaseline = "middle";
+//     ctx.font = digit.fontSize;
+//     ctx.fillText(digit.value, digit.x + digit.borderWidth + 1, digit.y + digit.height / 2);
+// }
 
-function drawDigits(digitList) {
+function drawDigits(digitList, ctx) {
     digitList.forEach((digit) => {
-        drawDigit(digit);
+        digit.draw(ctx);
     });
 }
 
@@ -70,7 +70,7 @@ function drawCartridgeDigits(offset, digitList) {
     digitList.forEach((digit) => {
         digit.offsetX = offset;
         digit.offsetY = cartridgeTileFallAnimation[cartridgeTileIndex];
-        drawDigit(digit);
+        digit.draw(CANVAS.getContext("2d"));
     });
 }
 
@@ -81,7 +81,7 @@ function drawCartridgeDigits(offset, digitList) {
  */
 
 let cartridgeAnimIndex = 0;
-const cartridgeAnimationX = [0, 1, 3, 7, 13, TOTAL_TILE_WIDTH-6];
+const cartridgeAnimationX = [0, 1, 3, 7, 13, TILE_PLUS_MARGIN-6];
 let cartridgeTileIndex = 0;
 const cartridgeTileFallAnimation = [0, 5, -1 * TILE_HEIGHT + 4, -1 * TILE_HEIGHT - 1];
 let cartridgeDirection = 0;
@@ -127,7 +127,7 @@ function drawCartridgeContainer(position) {
     // ctx = WATERFALL_CANVAS.getContext("2d");
     ctx = CANVAS.getContext("2d");
     // left = -1, so offset is added... right = 1, so offset is subtracted
-    const baseX = SIDE_MARGIN_WIDTH + (position * TOTAL_TILE_WIDTH) - cartridgeDirection * cartridgeAnimationX[cartridgeAnimIndex];
+    const baseX = SIDE_MARGIN_WIDTH + (position * TILE_PLUS_MARGIN) - cartridgeDirection * cartridgeAnimationX[cartridgeAnimIndex];
     const baseY = TOP_MARGIN_HEIGHT + (TOTAL_POSITIONS_HIGH - 1) * TILE_HEIGHT;
     ctx.beginPath();
     ctx.moveTo(baseX, baseY + TILE_HEIGHT / 2);
@@ -177,85 +177,6 @@ function drawCartridgeContainer(position) {
 
 /**
  * 
- * Satchel drawing
- * 
- */
-
-function drawSatchel() {
-    // ctx = SATCHEL_CANVAS.getContext("2d");
-    ctx = CANVAS.getContext("2d");
-    ctx.fillStyle = "#C49A70";
-    ctx.fillRect(GAME_WIDTH, 0, 250, 710);
-    ctx.fillStyle = "#967656";
-    ctx.fillRect(GAME_WIDTH + 10, 10, 230, 50);
-    ctx.fillRect(GAME_WIDTH + 10, 80, 230, 170);
-    ctx.fillRect(GAME_WIDTH + 10, 340, 230, 180);
-    drawCommonPrimes();
-}
-
-function updateSatchel() {
-    drawCommonPrimeScores();
-    drawUncommonPrimes();
-    drawNumber();
-}
-
-const commonPrimes = [new Factor(2), new Factor(3), new Factor(5), new Factor(7)];
-commonPrimes[0].x = GAME_WIDTH + 20;
-commonPrimes[1].x = GAME_WIDTH + 120;
-commonPrimes[2].x = GAME_WIDTH + 20;
-commonPrimes[3].x = GAME_WIDTH + 120;
-commonPrimes[0].y = 100;
-commonPrimes[1].y = 100;
-commonPrimes[2].y = 190;
-commonPrimes[3].y = 190;
-// commonPrimes.forEach(digit => {
-//     digit.width = 30;
-//     digit.height = 40;
-//     digit.fontSize = "bold 20px sans-serif"
-// });
-
-function drawCommonPrimes() {
-    ctx = CANVAS.getContext("2d");
-    commonPrimes.forEach(digit => drawDigit(digit));
-}
-
-function drawCommonPrimeScores() {
-    ctx = CANVAS.getContext("2d");
-    ctx.fillStyle = "#333";
-    ctx.fillRect(GAME_WIDTH + 60, 100, 30, 40);
-    ctx.fillRect(GAME_WIDTH + 160, 100, 30, 40);
-    ctx.fillRect(GAME_WIDTH + 60, 190, 30, 40);
-    ctx.fillRect(GAME_WIDTH + 160, 190, 30, 40);
-    ctx.fillStyle = "#DDD";
-    ctx.textBaseline = "top";
-    ctx.font = "20px system-ui";
-    console.log("drawing prime scores");
-    ctx.fillText(twosCount.toString(), GAME_WIDTH + 60, 100);
-    ctx.fillText(threesCount.toString(), GAME_WIDTH + 160, 100);
-    ctx.fillText(fivesCount.toString(), GAME_WIDTH + 60, 190);
-    ctx.fillText(sevensCount.toString(), GAME_WIDTH + 160, 190);
-}
-
-function drawUncommonPrimes() {
-
-}
-
-let numberBox = new Box(100);
-numberBox.x = GAME_WIDTH + 70;
-numberBox.y = 260;
-
-function drawNumber() {
-    ctx = CANVAS.getContext("2d");
-    if (lastNumberBuilt != -1) {
-        ctx.fillStyle = "#C49A70";
-        ctx.fillRect(numberBox.x, numberBox.y, 4 * TILE_WIDTH, numberBox.height);
-        numberBox.value = lastNumberBuilt;
-        drawDigit(numberBox);
-    }
-}
-
-/**
- * 
  * Initial drawing
  * 
  */
@@ -270,6 +191,4 @@ function drawNumber() {
 if (CANVAS.getContext) {
     drawWaterfallBackdrop();
     drawCartridge(4, []);
-    drawSatchel();
-    updateSatchel();
 }

@@ -72,5 +72,6 @@ function addNumberToSatchel(num) {
             // }
         }
     }
+    drawNumberAdded(num);
     updateSatchel();
 }
