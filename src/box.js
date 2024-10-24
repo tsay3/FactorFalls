@@ -88,9 +88,9 @@ class Factor extends Box {
         this._value = newValue;
         let fontValue = TILE_WIDTH * 2 / 3;
         this.width = fontValue + this.borderWidth * 2;
-        if (value >= 100) {
+        if (newValue >= 100) {
             this.width = 3 * fontValue + this.borderWidth * 2;
-        } else if (value >= 10) {
+        } else if (newValue >= 10) {
             this.width = 2 * fontValue + this.borderWidth * 2;
         }
     }

@@ -6,7 +6,7 @@
  */
 
 function handleMousedown(event) {
-    xPosLower = Math.max(Math.floor((event.pageX - SIDE_MARGIN_WIDTH) / TOTAL_TILE_WIDTH - 1), 0);
+    xPosLower = Math.max(Math.floor((event.pageX - SIDE_MARGIN_WIDTH) / TILE_PLUS_MARGIN - 1), 0);
     xPos = Math.min(xPosLower, TOTAL_POSITIONS_WIDE - 3);
     moveCartridgeTo(xPos);
 }
@@ -26,7 +26,7 @@ function handleTouchend() {
 
 function handleTouchmove(event) {
     if (numberOfTouches == 1) {
-        xPos = Math.min(Math.floor((event.pageX - SIDE_MARGIN_WIDTH) / TOTAL_TILE_WIDTH - 1), TOTAL_POSITIONS_WIDE - 3);
+        xPos = Math.min(Math.floor((event.pageX - SIDE_MARGIN_WIDTH) / TILE_PLUS_MARGIN - 1), TOTAL_POSITIONS_WIDE - 3);
         moveCartridgeTo(xPos);
     }
 }
