@@ -79,6 +79,41 @@ function drawNumberAdded(lastNumberBuilt) {
     }
 }
 
+let offscreenFactorBoxes = [];
+let onscreenFactorBoxes = [];
+for (let i = 0; i < 9; i++) {
+    let box = new Factor(0);
+    offscreenFactorBoxes.push(box);
+}
+
+/**
+ * 
+ * @param {Array} factors 
+ */
+function drawFactors(factors) {
+    // remove all onscreen factor boxes
+    for (let i = onscreenFactorBoxes.length - 1; i >= 0; i--) {
+        offscreenFactorBoxes.push(onscreenFactorBoxes.pop());
+    }
+    let baseX = numberBox.x + 100;
+    let baseY = numberBox.y;
+    let offsetX = 0;
+    let offsetY = 0;
+    for (let i = 0; i < factors.length; i++) {
+        let box = offscreenFactorBoxes.pop();
+        box.value = factors[i];
+        box.x = baseX + offsetX;
+        if (box.x + box.width > SCREEN_WIDTH) {
+            offsetX = 0;
+            offsetY += box.height + 10;
+            box.x = baseX + offsetX;
+        }
+        box.y = baseY + offsetY;
+        box.draw(CANVAS.getContext("2d"));
+        onscreenFactorBoxes.push(box);
+    }
+}
+
 if (CANVAS.getContext) {
     drawSatchel();
     updateSatchel();

@@ -7,7 +7,7 @@ class Box {
         this.innerColor = "#FFEFCF";
         this.width = TILE_WIDTH;
         this.height = TILE_HEIGHT;
-        this.borderWidth = 5;
+        this.borderWidth = TILE_BORDER;
         this.numberColor = "#7D969F";
         this.fontSize = "bold " + TILE_PLUS_MARGIN + "px sans-serif"
     }
@@ -62,7 +62,7 @@ class Box {
 class Factor extends Box {
     constructor(value) {
         super(value);
-        this.borderWidth = 4;
+        this.borderWidth = TILE_BORDER - 1;
         this.innerColor = "#CCC";
         this.borderColor = "#977";
         let fontValue = TILE_WIDTH * 2 / 3;
