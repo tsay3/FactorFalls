@@ -1,5 +1,4 @@
 
-
 let cartridgePosition = Math.floor(TOTAL_POSITIONS_WIDE / 2 - 1);
 let cartridgeTiles = [[], [], []];
 
