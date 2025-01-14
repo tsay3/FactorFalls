@@ -1,8 +1,9 @@
-// The game file contains the infrastructure
+// This file contains the basic infrastructure to keep the game running. It is the "entry point" for the rest of the game engine.
+// It currently includes the update function, and some variables to handle game cycles.
 
 
 function update() {
-    if ((document.timeline.currentTime - updateTime) / 30 > 1) {
+    if ((document.timeline.currentTime - updateTime) / GAME_UPDATE_RATE > 1) {
         updateWaterfallModel();
         if (debugMode) drawDebug();
         updateTime = document.timeline.currentTime;
@@ -15,19 +16,6 @@ function update() {
         digitAddTime = document.timeline.currentTime;
     }
     requestAnimationFrame(update);
-}
-
-// let digitNum = 0;
-// let fullGame = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-function setDigitValue() {
-    let tutorial1 = [4];
-    let tutorial2 = [4, 0, 5];
-    let tutorial3 = [4, 0, 5, 2];
-    let tutorial4 = [4, 0, 5, 2, 6, 1];
-    let tutorial5 = [4, 0, 5, 2, 6, 8, 1, 3];
-
-    return tutorial3[Math.floor(Math.random() * tutorial3.length)];
 }
 
 

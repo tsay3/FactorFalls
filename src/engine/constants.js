@@ -43,6 +43,7 @@ let TOP_MARGIN_HEIGHT = SCREEN_HEIGHT - TILE_HEIGHT * TOTAL_POSITIONS_HIGH - BOT
 
 const TILE_FALL_SPEED = 100; // px per second
 const DIGIT_SPAWN_RATE = 1650; // this many milliseconds
+const GAME_UPDATE_RATE = 30;
 
 console.log("WIDTH:", SCREEN_WIDTH);
 console.log("HEIGHT:", SCREEN_HEIGHT);
