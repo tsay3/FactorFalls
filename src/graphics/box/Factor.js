@@ -4,16 +4,10 @@ class Factor extends Box {
         this.borderWidth = TILE_BORDER - 1;
         this.innerColor = "#CCC";
         this.borderColor = "#977";
-        let fontValue = TILE_WIDTH * 2 / 3;
         this.height = TILE_HEIGHT * 2 / 3;
-        this.width = fontValue + this.borderWidth * 2;
-        if (value >= 100) {
-            this.width = 3 * fontValue + this.borderWidth * 2;
-        } else if (value >= 10) {
-            this.width = 2 * fontValue + this.borderWidth * 2;
-        }
+        this.adjustWidth(value);
         this.numberColor = "#999";
-        this.fontSize = "bold " + fontValue + "px sans-serif"
+        this.fontSize = "bold " + FONT_VALUE + "px sans-serif"
     }
 
     get value() {
@@ -25,12 +19,15 @@ class Factor extends Box {
      */
     set value(newValue) {
         this._value = newValue;
-        let fontValue = TILE_WIDTH * 2 / 3;
-        this.width = fontValue + this.borderWidth * 2;
+        this.adjustWidth(newValue);
+    }
+
+    adjustWidth(newValue) {
+        this.width = FONT_VALUE / 2 + 5 + this.borderWidth * 2;
         if (newValue >= 100) {
-            this.width = 3 * fontValue + this.borderWidth * 2;
+            this.width = 3 * FONT_VALUE / 2 + 5 + this.borderWidth * 2;
         } else if (newValue >= 10) {
-            this.width = 2 * fontValue + this.borderWidth * 2;
+            this.width = 2 * FONT_VALUE / 2 + 5 + this.borderWidth * 2;
         }
     }
 }

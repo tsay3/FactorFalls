@@ -15,3 +15,7 @@ This series of posts details the development of Factor Falls from the early stag
 10. [Day 10: Testing Suite, Part 2](10.md)
 11. [Day 11: Factoring, Number Drawing, and Simplifying the Canvas](11.md)
 12. [Day 12: Counting the Factors](12.md)
+13. [Day 13: Code Clean-up, II](13.md)
+14. [Day 14: Uncommon Primes](14.md)
+15. [Day 15: Code Restructuring](15.md)
+16. [Day 16: Factor Display, Continued](16.md)

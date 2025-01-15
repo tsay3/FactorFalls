@@ -24,6 +24,7 @@ const TOTAL_POSITIONS_WIDE = 7;
 const TOTAL_POSITIONS_HIGH = 12;
 
 const TILE_WIDTH = 34;
+const FONT_VALUE = 22; // TILE_WIDTH * 2 / 3;
 const TILE_MARGIN_WIDTH = 6;
 const TILE_HEIGHT = 50;
 const TILE_BORDER = 5;

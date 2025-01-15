@@ -18,11 +18,6 @@ function drawSatchel() {
     drawCommonPrimes();
 }
 
-function updateSatchel() {
-    drawCommonPrimeScores();
-    drawUncommonPrimes();
-}
-
 const commonPrimes = [new Factor(2), new Factor(3), new Factor(5), new Factor(7)];
 commonPrimes[0].x = GAME_WIDTH + 20;
 commonPrimes[1].x = GAME_WIDTH + 120;
@@ -65,25 +60,34 @@ function drawUncommonPrimes() {
 }
 
 let numberBox = new Factor(100);
-numberBox.x = GAME_WIDTH + 70;
+numberBox.x = GAME_WIDTH + 20;
 numberBox.y = 260;
 
-function drawNumberAdded(lastNumberBuilt) {
+function clearNumberArea() {
+    ctx = CANVAS.getContext("2d");
+    ctx.fillStyle = "#456";
+    ctx.fillRect(numberBox.x-10, numberBox.y-10, 9 * TILE_WIDTH+10, numberBox.height+30);
+}
+/**
+ * Draws a new number in the satchel
+ * @param {number} lastNumberBuilt
+ */
+function drawAddedNumber(lastNumberBuilt) {
     ctx = CANVAS.getContext("2d");
     if (lastNumberBuilt != -1) {
-        ctx.fillStyle = SATCHEL_BASE_COLOR;
-        ctx.fillRect(numberBox.x, numberBox.y, 4 * TILE_WIDTH, numberBox.height);
         numberBox.value = lastNumberBuilt;
-        numberBox.draw(CANVAS.getContext("2d"));
+        numberBox.draw(ctx);
         console.log("number drawn: " + lastNumberBuilt);
     }
 }
 
-let offscreenFactorBoxes = [];
-let onscreenFactorBoxes = [];
+let allFactorBoxes = [];
+let numVisibleFactors = 0;
 for (let i = 0; i < 9; i++) {
     let box = new Factor(0);
-    offscreenFactorBoxes.push(box);
+    box.x = numberBox.x + 50 + i * 10;
+    box.y = numberBox.y + (i % 2) * 20;
+    allFactorBoxes.push(box);
 }
 
 /**
@@ -92,26 +96,32 @@ for (let i = 0; i < 9; i++) {
  */
 function drawFactors(factors) {
     // remove all onscreen factor boxes
-    for (let i = onscreenFactorBoxes.length - 1; i >= 0; i--) {
-        offscreenFactorBoxes.push(onscreenFactorBoxes.pop());
-    }
-    let baseX = numberBox.x + 100;
-    let baseY = numberBox.y;
-    let offsetX = 0;
-    let offsetY = 0;
-    for (let i = 0; i < factors.length; i++) {
-        let box = offscreenFactorBoxes.pop();
+    // for (let i = onscreenFactorBoxes.length - 1; i >= 0; i--) {
+    //     offscreenFactorBoxes.push(onscreenFactorBoxes.pop());
+    // }
+    numVisibleFactors = factors.length;
+    // let baseX = numberBox.x + 100;
+    // let baseY = numberBox.y;
+    // let offsetX = 0;
+    // let offsetY = 0;
+    for (let i = 0; i < numVisibleFactors; i++) {
+        let box = allFactorBoxes[i];
         box.value = factors[i];
-        box.x = baseX + offsetX;
-        if (box.x + box.width > SCREEN_WIDTH) {
-            offsetX = 0;
-            offsetY += box.height + 10;
-            box.x = baseX + offsetX;
-        }
-        box.y = baseY + offsetY;
+        // box.x = baseX + offsetX;
+        // if (box.x + box.width > SCREEN_WIDTH) {
+        //     offsetX = 0;
+        //     offsetY += box.height + 10;
+        //     box.x = baseX + offsetX;
+        // }
+        // box.y = baseY + offsetY;
         box.draw(CANVAS.getContext("2d"));
-        onscreenFactorBoxes.push(box);
+        // onscreenFactorBoxes.push(box);
     }
+}
+
+function updateSatchel() {
+    drawCommonPrimeScores();
+    drawUncommonPrimes();
 }
 
 if (CANVAS.getContext) {
