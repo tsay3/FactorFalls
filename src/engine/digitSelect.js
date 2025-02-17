@@ -13,6 +13,14 @@ let tutorial5 = [4, 0, 5, 2, 6, 8, 1, 3];
 let gameProgression = [tutorial1, tutorial2, tutorial3, tutorial4, tutorial5, fullGame];
 
 function setDigitValue() {
+    return numberTesting();
+    let grouping = tutorial3;
+    return grouping[Math.floor(Math.random() * grouping.length)];
+}
 
-    return tutorial3[Math.floor(Math.random() * tutorial3.length)];
+function numberTesting() {
+    if (Math.random() > .7) {
+        return 4;
+    }
+    return 1;
 }

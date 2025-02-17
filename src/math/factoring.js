@@ -41,7 +41,5 @@ let threesCount = 0;
 let fivesCount = 0;
 let sevensCount = 0;
 
-let uncommonFactors = [new Factor(0), new Factor(0), new Factor(0),
-    new Factor(0), new Factor(0), new Factor(0)
-];
-let uncommonCount = [0, 0, 0, 0, 0, 0];
+let uncommonFactors = [];
+let uncommonCount = [];

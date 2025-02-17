@@ -19,3 +19,4 @@ This series of posts details the development of Factor Falls from the early stag
 14. [Day 14: Uncommon Primes](14.md)
 15. [Day 15: Code Restructuring](15.md)
 16. [Day 16: Factor Display, Continued](16.md)
+17. [Day 17: Uncommon Primes, Continued](17.md)

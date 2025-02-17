@@ -10,28 +10,42 @@ function drawSatchel() {
     // ctx = SATCHEL_CANVAS.getContext("2d");
     ctx = CANVAS.getContext("2d");
     ctx.fillStyle = SATCHEL_BASE_COLOR;
-    ctx.fillRect(GAME_WIDTH, 0, 250, 710);
+    ctx.fillRect(GAME_WIDTH, 0, SATCHEL_WIDTH, 710);
     ctx.fillStyle = "#967656";
-    ctx.fillRect(GAME_WIDTH + 10, 10, 230, 50);
-    ctx.fillRect(GAME_WIDTH + 10, 80, 230, 170);
-    ctx.fillRect(GAME_WIDTH + 10, 340, 230, 180);
+    ctx.fillRect(GAME_WIDTH + SATCHEL_BORDER, SATCHEL_BORDER, SATCHEL_WIDTH - 2 * SATCHEL_BORDER, SATCHEL_SCORE_HEIGHT);
+    ctx.fillRect(GAME_WIDTH + SATCHEL_BORDER, SATCHEL_COMMON_BASE_Y, SATCHEL_WIDTH - 2 * SATCHEL_BORDER, SATCHEL_COMMON_HEIGHT);
+    drawUncommonPrimeArea();
     drawCommonPrimes();
 }
 
+function drawUncommonPrimeArea() {
+    ctx = CANVAS.getContext("2d");
+    ctx.fillStyle = "#967656";
+    ctx.fillRect(GAME_WIDTH + SATCHEL_BORDER, SATCHEL_UNCOMMON_BASE_Y, SATCHEL_WIDTH - 2 * SATCHEL_BORDER, SATCHEL_UNCOMMON_HEIGHT);
+}
+
 const commonPrimes = [new Factor(2), new Factor(3), new Factor(5), new Factor(7)];
-commonPrimes[0].x = GAME_WIDTH + 20;
-commonPrimes[1].x = GAME_WIDTH + 120;
-commonPrimes[2].x = GAME_WIDTH + 20;
-commonPrimes[3].x = GAME_WIDTH + 120;
-commonPrimes[0].y = 100;
-commonPrimes[1].y = 100;
-commonPrimes[2].y = 190;
+commonPrimes[0].x = GAME_WIDTH + 2 * SATCHEL_BORDER;
+commonPrimes[1].x = GAME_WIDTH + 2 * SATCHEL_BORDER + 100;
+commonPrimes[2].x = GAME_WIDTH + 2 * SATCHEL_BORDER;
+commonPrimes[3].x = GAME_WIDTH + 2 * SATCHEL_BORDER + 100;
+commonPrimes[0].y = SATCHEL_COMMON_BASE_Y + 2 * SATCHEL_BORDER;
+commonPrimes[1].y = SATCHEL_COMMON_BASE_Y + 2 * SATCHEL_BORDER;
+commonPrimes[2].y = SATCHEL_COMMON_BASE_Y + 2 * SATCHEL_BORDER + TILE_HEIGHT + 40;
 commonPrimes[3].y = 190;
 // commonPrimes.forEach(digit => {
 //     digit.width = 30;
 //     digit.height = 40;
 //     digit.fontSize = "bold 20px sans-serif"
 // });
+
+for (let i = 0; i < UNCOMMON_FACTOR_COUNT; i++) {
+    let factor = new Factor(0);
+    factor.x = GAME_WIDTH + 2 * SATCHEL_BORDER + Math.floor(i / 4) * 100;
+    factor.y = SATCHEL_UNCOMMON_BASE_Y + SATCHEL_BORDER + (i % 4) * (FACTOR_HEIGHT + 5);
+    uncommonFactors.push(factor);
+    uncommonCount.push(0);
+}
 
 function drawCommonPrimes() {
     ctx = CANVAS.getContext("2d");
@@ -56,7 +70,22 @@ function drawCommonPrimeScores() {
 }
 
 function drawUncommonPrimes() {
-
+    ctx = CANVAS.getContext("2d");
+    for (let i = 0; i < UNCOMMON_FACTOR_COUNT; i++) {
+        if (uncommonCount[i] > 0) {
+            uncommonFactors[i].draw(ctx);
+            if (uncommonCount[i] > 1) {
+                for (let j = 0; j < uncommonCount[i]; j++) {
+                    let markerX = uncommonFactors[i].x + TILE_WIDTH + (j*3);
+                    let markerY = uncommonFactors[i].y + (j+1) * (FACTOR_HEIGHT/3);
+                    ctx.fillStyle = FACTOR_COUNT_BORDER_COLOR;
+                    ctx.roundRect(markerX, markerY, 4, 4, 2);
+                    ctx.fillStyle = FACTOR_COUNT_INNER_COLOR;
+                    ctx.roundRect(markerX, markerY, 2, 2, 1);
+                }
+            }
+        }
+    }
 }
 
 let numberBox = new Factor(100);
@@ -121,6 +150,7 @@ function drawFactors(factors) {
 
 function updateSatchel() {
     drawCommonPrimeScores();
+    drawUncommonPrimeArea();
     drawUncommonPrimes();
 }
 
